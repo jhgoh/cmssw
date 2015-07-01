@@ -101,7 +101,6 @@ void PseudoTop::project(const Event& e) {
 
   // Start object building from trivial thing - prompt neutrinos
   std::sort(neutrinos.begin(), neutrinos.end(), GreaterByPt());
-for ( const auto& nu : neutrinos ) { if ( abs(nu.pdgId()) == 16 ) return; }
 
   // Proceed to lepton dressing
   FastJets fjLep(FastJets::ANTIKT, _lepR);
