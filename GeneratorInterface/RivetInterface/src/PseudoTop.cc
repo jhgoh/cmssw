@@ -62,7 +62,7 @@ void PseudoTop::project(const Event& e) {
     const int pdgId = p->pdg_id();
     if ( status == 1 ) {
       Particle rp(*p);
-      if ( !PID::isHadron(pdgId) && rp.fromDecay() ) {
+      if ( !PID::isHadron(pdgId) && !rp.fromHadron() ) {
         // Collect particles not from hadron decay
         if ( rp.isNeutrino() ) {
           // Prompt neutrinos are kept in separate collection
