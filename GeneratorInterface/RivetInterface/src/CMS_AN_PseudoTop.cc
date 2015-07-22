@@ -54,14 +54,14 @@ public:
     const double pt2 = std::min(t1P4.pT(), t2P4.pT());
     const double dPhi = deltaPhi(t1P4, t2P4);
     const FourMomentum ttP4 = t1P4+t2P4;
-    //const FourMomentum t1P4AtCM = LorentzTransform(-ttP4.boostVector()).transform(t1P4);
+    const FourMomentum t1P4AtCM = LorentzTransform(-ttP4.boostVector()).transform(t1P4);
 
     if ( ttbar.mode() == PseudoTop::CH_SEMILEPTON ) {
       //const Particle lCand1 = ttbar.wDecays1()[0];
       //const Particle lCand2 = ttbar.wDecays2()[0];
       _h14_diffXSecTopSemiLepPartontopPt->fill(t1P4.pT(), weight);
       _h14_diffXSecTopSemiLepPartontopPt->fill(t2P4.pT(), weight);
-      _h15_diffXSecTopSemiLepPartontopPtTtbarSys->fill(0, weight);//t1P4AtCM.pT(), weight);
+      _h15_diffXSecTopSemiLepPartontopPtTtbarSys->fill(t1P4AtCM.pT(), weight);
       _h16_diffXSecTopSemiLepPartontopY->fill(t1P4.rapidity(), weight);
       _h16_diffXSecTopSemiLepPartontopY->fill(t2P4.rapidity(), weight);
       _h17_diffXSecTopSemiLepPartonttbarDelPhi->fill(dPhi, weight);
@@ -74,7 +74,7 @@ public:
     else if ( ttbar.mode() == PseudoTop::CH_FULLLEPTON ) {
       _h23_diffXSecTopDiLepPartontopPt->fill(t1P4.pT(), weight);
       _h23_diffXSecTopDiLepPartontopPt->fill(t2P4.pT(), weight);
-      _h24_diffXSecTopDiLepPartontopPtTtbarSys->fill(0, weight);//t1P4AtCM.pT(), weight);
+      _h24_diffXSecTopDiLepPartontopPtTtbarSys->fill(t1P4AtCM.pT(), weight);
       _h25_diffXSecTopDiLepPartontopY->fill(t1P4.rapidity(), weight);
       _h25_diffXSecTopDiLepPartontopY->fill(t2P4.rapidity(), weight);
       _h26_diffXSecTopDiLepPartonttbarDelPhi->fill(dPhi, weight);
