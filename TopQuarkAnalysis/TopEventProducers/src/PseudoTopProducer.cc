@@ -446,6 +446,7 @@ const reco::Candidate* PseudoTopProducer::getLast(const reco::Candidate* p)
 
 bool PseudoTopProducer::isFromHadron(const reco::Candidate* p) const
 {
+  if ( !p ) return false;
   for ( size_t i=0, n=p->numberOfMothers(); i<n; ++i )
   {
     const reco::Candidate* mother = p->mother(i);
