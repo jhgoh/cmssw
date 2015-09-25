@@ -83,6 +83,7 @@ void PseudoTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
     if ( p.numberOfMothers() == 0 ) continue; // Skip orphans (if exists)
     if ( p.mother()->status() == 4 ) continue; // Treat particle as hadronic if directly from the incident beam (protect orphans in MINIAOD)
     if ( allHadronDaus.find(&p) != allHadronDaus.end() ) continue;
+    if ( allHadronDaus.find(p.mother()) != allHadronDaus.end() ) continue; // Check mother is hadron decay product (needed for MiniAOD)
     switch ( absPdgId )
     {
       case 11: case 13: // Leptons
