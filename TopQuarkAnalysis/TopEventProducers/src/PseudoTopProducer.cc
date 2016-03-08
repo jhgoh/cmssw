@@ -130,7 +130,6 @@ void PseudoTopProducer::produce(edm::Event& event, const edm::EventSetup& eventS
       constituents.push_back(cand);
     }
     if ( lepCand.isNull() ) continue;
-    if ( lepCand->pt() < fjJet.pt()/2 ) continue; // Central lepton must be the major component
 
     const LorentzVector jetP4(fjJet.px(), fjJet.py(), fjJet.pz(), fjJet.E());
     reco::GenJet lepJet;
