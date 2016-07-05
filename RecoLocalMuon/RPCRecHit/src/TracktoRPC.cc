@@ -1,21 +1,25 @@
-#include "Geometry/RPCGeometry/interface/RPCGeometry.h"
-#include "Geometry/DTGeometry/interface/DTGeometry.h"
-#include "DataFormats/DTRecHit/interface/DTRecSegment4DCollection.h"
-#include "Geometry/CommonDetUnit/interface/GeomDet.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
-#include "Geometry/CommonTopologies/interface/RectangularStripTopology.h"
-#include "FWCore/Framework/interface/ESHandle.h"
-#include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
-#include "DataFormats/RPCRecHit/interface/RPCRecHit.h"
-#include "DataFormats/RPCRecHit/interface/RPCRecHitCollection.h"
-#include "DataFormats/DetId/interface/DetId.h"
 #include "RecoLocalMuon/RPCRecHit/interface/TracktoRPC.h"
+
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "Geometry/Records/interface/MuonGeometryRecord.h"
+#include "Geometry/DTGeometry/interface/DTGeometry.h"
+#include "Geometry/CSCGeometry/interface/CSCGeometry.h"
+#include "Geometry/RPCGeometry/interface/RPCGeometry.h"
+#include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
+#include "Geometry/RPCGeometry/interface/RPCRoll.h"
+#include "Geometry/CommonTopologies/interface/RectangularStripTopology.h"
+#include "Geometry/CommonTopologies/interface/TrapezoidalStripTopology.h"
+
+#include "TrackingTools/PatternTools/interface/Trajectory.h"
+#include "TrackingTools/TrackRefitter/interface/TrackTransformer.h"
+#include "TrackingTools/TrackRefitter/interface/TrackTransformerForCosmicMuons.h"
+#include "TrackingTools/Records/interface/TrackingComponentsRecord.h"
+
 #include "RecoLocalMuon/RPCRecHit/src/DTStationIndex.h"
-#include "RecoLocalMuon/RPCRecHit/src/DTObjectMap.h"
 #include "RecoLocalMuon/RPCRecHit/src/CSCStationIndex.h"
+#include "RecoLocalMuon/RPCRecHit/src/DTObjectMap.h"
 #include "RecoLocalMuon/RPCRecHit/src/CSCObjectMap.h"
 
-#include <ctime>
 #include <TMath.h>
 
 bool TracktoRPC::ValidRPCSurface(RPCDetId rpcid, LocalPoint LocalP, const edm::EventSetup& iSetup)
@@ -77,9 +81,9 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
 std::vector<uint32_t> rpcput;
 double MaxD=999.;
 
-for (TrackCollection::const_iterator track = alltracks->begin(); track !=alltracks->end(); track++)
+for (reco::TrackCollection::const_iterator track = alltracks->begin(); track !=alltracks->end(); track++)
 {
- Trajectories trajectories = theTrackTransformer->transform(*track);
+ auto trajectories = theTrackTransformer->transform(*track);
  if(debug) std::cout << "Building Trajectory from Track. " << std::endl;
 
  std::vector<uint32_t> rpcrolls;
@@ -107,7 +111,7 @@ for(trackingRecHit_iterator hit=track->recHitsBegin(); hit != track->recHitsEnd(
        {
           const GeomDet *geomDet =  dtGeo->idToDet((*hit)->geographicalId());
           const DTLayer *dtlayer = dynamic_cast<const DTLayer *>(geomDet);
-         if(dtlayer) for(Trajectories::const_iterator trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
+         if(dtlayer) for(auto trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
           {
              const BoundPlane & DTSurface = dtlayer->surface();
              const GlobalPoint dcPoint = DTSurface.toGlobal(LocalPoint(0.,0.,0.));
@@ -156,7 +160,7 @@ for(trackingRecHit_iterator hit=track->recHitsBegin(); hit != track->recHitsEnd(
           const CSCLayer *csclayer = dynamic_cast<const CSCLayer *>(geomDet);
 
           CSCDetId cscid(geomDet->geographicalId().rawId());
-          if(csclayer) for(Trajectories::const_iterator trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
+          if(csclayer) for(auto trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
           {
              const BoundPlane & CSCSurface = csclayer->surface();
              const GlobalPoint dcPoint = CSCSurface.toGlobal(LocalPoint(0.,0.,0.));
@@ -291,7 +295,7 @@ for(trackingRecHit_iterator hit=track->recHitsBegin(); hit != track->recHitsEnd(
            const GeomDet *geomDet =  dtGeo->idToDet(dtcscid);
            const DTLayer *dtlayer = dynamic_cast<const DTLayer *>(geomDet);
         
-           if(dtlayer) for(Trajectories::const_iterator trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
+           if(dtlayer) for(auto trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
            {
               const BoundPlane & DTSurface = dtlayer->surface();
               const GlobalPoint dcPoint = DTSurface.toGlobal(LocalPoint(0.,0.,0.));
@@ -343,7 +347,7 @@ for(trackingRecHit_iterator hit=track->recHitsBegin(); hit != track->recHitsEnd(
            const GeomDet *geomDet4 =  cscGeo->idToDet(dtcscid);
            const CSCLayer *csclayer = dynamic_cast<const CSCLayer *>(geomDet4);
         
-           if(csclayer) for(Trajectories::const_iterator trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
+           if(csclayer) for(auto trajectory = trajectories.begin(); trajectory != trajectories.end(); ++trajectory)
            {
               const BoundPlane & CSCSurface = csclayer->surface();
               const GlobalPoint dcPoint = CSCSurface.toGlobal(LocalPoint(0.,0.,0.));
