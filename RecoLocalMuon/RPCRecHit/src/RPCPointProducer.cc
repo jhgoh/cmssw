@@ -32,12 +32,12 @@ RPCPointProducer::RPCPointProducer(const edm::ParameterSet& iConfig) :
   tracks_(      iConfig.getParameter<edm::InputTag>("tracks") ),
   incldt(       iConfig.getUntrackedParameter<bool>("incldt", true) ),
   inclcsc(      iConfig.getUntrackedParameter<bool>("inclcsc", true) ),
-  incltrack(    iConfig.getUntrackedParameter<bool>("incltrack", true) ), 
+  incltrack(    iConfig.getUntrackedParameter<bool>("incltrack", false) ),
   debug(        iConfig.getUntrackedParameter<bool>("debug", false) ),
-  MinCosAng(    iConfig.getUntrackedParameter<double>("MinCosAng", 0.95) ),
+  MinCosAng(    iConfig.getUntrackedParameter<double>("MinCosAng", 0.85) ),
   MaxD(         iConfig.getUntrackedParameter<double>("MaxD", 80.) ),
   MaxDrb4(      iConfig.getUntrackedParameter<double>("MaxDrb4", 150.) ),
-  ExtrapolatedRegion( iConfig.getUntrackedParameter<double>("ExtrapolatedRegion", 0.5) ),
+  ExtrapolatedRegion( iConfig.getUntrackedParameter<double>("ExtrapolatedRegion", 0.6) ),
   trackTransformerParam( iConfig.getParameter<edm::ParameterSet>("TrackTransformer") )
 {
   produces<RPCRecHitCollection>("RPCDTExtrapolatedPoints");
