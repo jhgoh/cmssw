@@ -15,12 +15,10 @@ public:
   CSCSegtoRPC(CSCSegmentCollection const* allCSCSegments, edm::EventSetup const& iSetup, bool debug, double eyr);
   ~CSCSegtoRPC();
   std::unique_ptr<RPCRecHitCollection> && thePoints(){ return std::move(_ThePoints); }
-   
+
 private:
-  std::unique_ptr<RPCRecHitCollection> _ThePoints; 
+  std::unique_ptr<RPCRecHitCollection> _ThePoints;
   edm::OwnVector<RPCRecHit> RPCPointVector;
-  bool inclcsc;
-  double MaxD;
 };
 
 #endif
