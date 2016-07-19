@@ -14,8 +14,10 @@ rpcPointProducer = cms.EDProducer("RPCPointProducer",
   MaxDrb4 = cms.untracked.double(150.0),
   ExtrapolatedRegion = cms.untracked.double(0.6), #in stripl/2 in Y and stripw*nstrips/2 in X
 
-  cscSegments = cms.InputTag('hltCscSegments'),
-  dt4DSegments = cms.InputTag('hltDt4DSegments'),
+  #cscSegments = cms.InputTag('hltCscSegments'),
+  #dt4DSegments = cms.InputTag('hltDt4DSegments'),
+  cscSegments = cms.tracked.InputTag('cscSegments'),
+  dt4DSegments = cms.tracked.InputTag('dt4DSegments'),
   tracks = cms.InputTag("standAloneMuons"),
   TrackTransformer = cms.PSet(
       DoPredictionsOnly = cms.bool(False),
@@ -27,7 +29,5 @@ rpcPointProducer = cms.EDProducer("RPCPointProducer",
       RefitRPCHits = cms.bool(False),
       Propagator = cms.string('SmartPropagatorAnyRKOpposite')
   )
-#  cscSegments = cms.tracked.InputTag('cscSegments'),
-#  dt4DSegments = cms.tracked.InputTag('dt4DSegments'),
 
 )
