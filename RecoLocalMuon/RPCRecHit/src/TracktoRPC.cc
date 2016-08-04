@@ -36,7 +36,7 @@ bool TracktoRPC::ValidRPCSurface(RPCDetId rpcid, LocalPoint LocalP, const edm::E
     float boundlength = rollbound.length();
     float boundwidth = rollbound.width();
 
-    if(fabs(locx) < boundwidth/2 && fabs(locy) < boundlength/2 && locy > -boundlength/2) return true;
+    if(std::abs(locx) < boundwidth/2 && std::abs(locy) < boundlength/2 && locy > -boundlength/2) return true;
     else return false;
 
   }
@@ -47,17 +47,17 @@ bool TracktoRPC::ValidRPCSurface(RPCDetId rpcid, LocalPoint LocalP, const edm::E
     float boundwidth = rollbound.width();
 
     float nminx = TMath::Pi()*(18*boundwidth/ TMath::Pi() - boundlength)/18;
-    float ylimit = ((boundlength)/(boundwidth/2 - nminx/2))*fabs(locx) + boundlength/2 - ((boundlength)/(boundwidth/2 - nminx/2))*(boundwidth/2);
+    float ylimit = ((boundlength)/(boundwidth/2 - nminx/2))*std::abs(locx) + boundlength/2 - ((boundlength)/(boundwidth/2 - nminx/2))*(boundwidth/2);
     if(ylimit < -boundlength/2 ) ylimit = -boundlength/2;
 
-    if(fabs(locx) < boundwidth/2 && fabs(locy) < boundlength/2 && locy > ylimit) return true;
+    if(std::abs(locx) < boundwidth/2 && std::abs(locy) < boundlength/2 && locy > ylimit) return true;
     else return false;
   }
 
   return false;
 }
 
-TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::EventSetup& iSetup, bool debug,const edm::ParameterSet& iConfig, const edm::InputTag& tracklabel){
+TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::EventSetup& iSetup, const edm::ParameterSet& iConfig, const edm::InputTag& tracklabel){
 
   _ThePoints.reset(new RPCRecHitCollection());
   // if(alltracks->empty()) return;
@@ -85,7 +85,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
 
   for ( auto track : *alltracks ) {
     auto trajectories = theTrackTransformer->transform(track);
-    if(debug) std::cout << "Building Trajectory from Track. " << std::endl;
 
     std::vector<uint32_t> rpcrolls;
     std::vector<uint32_t> rpcrolls2;
@@ -98,10 +97,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
     if(tInY > tOuY) { float temp=tOuY; tOuY=tInY; tInY=temp; }
     if(tInZ > tOuZ) { float temp=tOuZ; tOuZ=tInZ; tInZ=temp; }
 
-    if(debug) std::cout << "in (x,y,z): ("<< tInX <<", "<< tInY <<", "<< tInZ << ")" << std::endl;
-    if(debug) std::cout << "out (x,y,z): ("<< tOuX <<", "<< tOuY <<", "<< tOuZ << ")" << std::endl;
-
-    if(debug) std::cout << "1. Search expeted RPC roll detid !!" << std::endl;
     for ( auto hit=track.recHitsBegin(); hit != track.recHitsEnd(); ++hit ) {
       if ( !(*hit)->isValid() ) continue;
       const DetId id = (*hit)->geographicalId();
@@ -143,7 +138,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
 
             rpcrolls.push_back(rollasociated->id().rawId());
             RPCGeomServ servId(rollasociated->id().rawId());
-            if(debug) std::cout << "1\t Barrel RPC roll" << rollasociated->id().rawId() << " "<< servId.name().c_str() <<std::endl;
           }
         }
       }
@@ -188,15 +182,10 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
             if ( !check ) continue;
             rpcrolls.push_back(rollasociated->id().rawId());
             RPCGeomServ servId(rollasociated->id().rawId());
-            if(debug) std::cout << "1\t Forward RPC roll" << rollasociated->id().rawId() << " "<< servId.name().c_str() <<std::endl;
           }
         }
       }
-      else {
-        if(debug) std::cout << "1\t The hit is not DT/CSC's.   " << std::endl;
-      }
     }
-    if(debug) std::cout << "First step OK!!\n2. Search nearest DT/CSC sufrace!!" << std::endl;
     for( auto rpcroll : rpcrolls ) {
       RPCDetId rpcid(rpcroll);
       const GlobalPoint &rGP = rpcGeo->idToDet(rpcroll)->surface().toGlobal(LocalPoint(0,0,0));
@@ -229,7 +218,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           if( rEn!=0 or (rSe-Se)!=0 or (rWr-Wh) !=0 or (rSt-St)!=0 or distanceN >= distance) continue;
           dtcscid=geomDet->geographicalId().rawId();
           distance = distanceN;
-          if(debug) std::cout << "2\t DT "<< dtcscid << " Wheel : " << Wh << " station : " << St << " sector : " << Se << std::endl;
         }
         else if ( id.subdetId() == MuonSubdetId::CSC) {
           const GeomDet *geomDet =  cscGeo->idToDet((*hit)->geographicalId());
@@ -245,7 +233,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           if((rEn-En)!=0 or (rSt-St)!=0 or (Ch-rCh) !=0 or rWr==1 or rSt==4 or distanceN >= distance) continue;
           dtcscid=geomDet->geographicalId().rawId();
           distance = distanceN;
-          if(debug) std::cout << "2\t CSC " <<dtcscid <<" region : " << En << " station : " << St << " Ring : " << Ri << " chamber : " << Ch <<std::endl;
         }
       }
       if(dtcscid != 0 && distance < MaxD)
@@ -254,7 +241,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
         rpcNdtcsc[rpcroll] = dtcscid;
       }
     }
-    if(debug) std::cout << "Second step OK!! \n3. Propagate to RPC from DT/CSC!!" << std::endl;
     for( auto rpcroll2 : rpcrolls2 ) {
       if ( rpcput.find(rpcroll2) != rpcput.end() ) continue;
 
@@ -291,7 +277,7 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           const RectangularStripTopology* top_= dynamic_cast<const RectangularStripTopology*> (&(aroll->topology()));
           LocalPoint xmin = top_->localPosition(0.);
           LocalPoint xmax = top_->localPosition((float)aroll->nstrips());
-          float rsize = fabs( xmax.x()-xmin.x() );
+          float rsize = std::abs( xmax.x()-xmin.x() );
           float stripl = top_->stripLength();
           //float stripw = top_->pitch();
           float eyr=1;
@@ -302,8 +288,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
             RPCRecHit RPCPoint(rpcroll2,0,LocalPoint(locx,locy,locz));
 
             RPCGeomServ servId(rpcroll2);
-            if(debug) std::cout << "3\t Barrel Expected RPC " << servId.name().c_str() <<
-              " \tLocalposition X: " << locx << ", Y: "<< locy << " GlobalPosition(x,y,z) (" << rpcGPX <<", "<< rpcGPY <<", " << rpcGPZ << ")"<< std::endl;
             RPCPointVector.clear();
             RPCPointVector.push_back(RPCPoint);
             _ThePoints->put(rpcroll2,RPCPointVector.begin(),RPCPointVector.end());
@@ -341,7 +325,7 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           const TrapezoidalStripTopology* top_=dynamic_cast<const TrapezoidalStripTopology*>(&(aroll->topology()));
           LocalPoint xmin = top_->localPosition(0.);
           LocalPoint xmax = top_->localPosition((float)aroll->nstrips());
-          float rsize = fabs( xmax.x()-xmin.x() );
+          float rsize = std::abs( xmax.x()-xmin.x() );
           float stripl = top_->stripLength();
           //float stripw = top_->pitch();
 
@@ -351,8 +335,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           if( locx >= rsize*eyr or locy >= stripl*eyr or locz >= 1. ) continue;
           RPCRecHit RPCPoint(rpcroll2,0,LocalPoint(locx,locy,locz));
           RPCGeomServ servId(rpcroll2);
-          if(debug) std::cout << "3\t Forward Expected RPC " << servId.name().c_str() <<
-            " \tLocalposition X: " << locx << ", Y: "<< locy << " GlobalPosition(x,y,z) (" << rpcGPX <<", "<< rpcGPY <<", " << rpcGPZ << ")"<< std::endl;
           RPCPointVector.clear();
           RPCPointVector.push_back(RPCPoint);
           _ThePoints->put(rpcroll2,RPCPointVector.begin(),RPCPointVector.end());
@@ -360,7 +342,6 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
         }
       }
     }
-    if(debug) std::cout << "last steps OK!! " << std::endl;
   }
 }
 
