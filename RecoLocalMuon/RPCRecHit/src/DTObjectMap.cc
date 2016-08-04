@@ -17,25 +17,23 @@ DTObjectMap::DTObjectMap(MuonGeometryRecord const& record)
 
   edm::ESHandle<DTGeometry> dtGeo;
   record.get(dtGeo);
-  
-  for (TrackingGeometry::DetContainer::const_iterator it=rpcGeo->dets().begin();it<rpcGeo->dets().end();it++){
-    if(dynamic_cast<const RPCChamber* >( *it ) != 0 ){
-      auto ch = dynamic_cast<const RPCChamber* >( *it ); 
-      std::vector< const RPCRoll*> roles = (ch->rolls());
-      for(std::vector<const RPCRoll*>::const_iterator r = roles.begin();r != roles.end(); ++r){
-	RPCDetId rpcId = (*r)->id();
-	int region=rpcId.region();
-	if(region==0){
-	  int wheel=rpcId.ring();
-	  int sector=rpcId.sector();
-	  int station=rpcId.station();
-	  DTStationIndex ind(region,wheel,sector,station);
-	  std::set<RPCDetId> myrolls;
-	  if (rollstore.find(ind)!=rollstore.end()) myrolls=rollstore[ind];
-	  myrolls.insert(rpcId);
-	  rollstore[ind]=myrolls;
-	}
-      }
+
+  for ( auto det : rpcGeo->dets() ) {
+    auto ch = dynamic_cast<const RPCChamber*>(det);
+    if ( !ch ) continue;
+    for ( auto r : ch->rolls() ) {
+      const RPCDetId rpcId = r->id();
+      const int region=rpcId.region();
+      if ( region != 0 ) continue;
+
+      const int wheel   = rpcId.ring();
+      const int sector  = rpcId.sector();
+      const int station = rpcId.station();
+      DTStationIndex ind(region,wheel,sector,station);
+      std::set<RPCDetId> myrolls;
+      if ( rollstore.find(ind) != rollstore.end() ) myrolls = rollstore[ind];
+      myrolls.insert(rpcId);
+      rollstore[ind]=myrolls;
     }
   }
 }

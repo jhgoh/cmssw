@@ -12,7 +12,7 @@
 
 class CSCSegtoRPC {
 public:
-  CSCSegtoRPC(CSCSegmentCollection const* allCSCSegments, edm::EventSetup const& iSetup, bool debug, double eyr);
+  CSCSegtoRPC(CSCSegmentCollection const* allCSCSegments, edm::EventSetup const& iSetup, double eyr);
   ~CSCSegtoRPC();
   std::unique_ptr<RPCRecHitCollection> && thePoints(){ return std::move(_ThePoints); }
 

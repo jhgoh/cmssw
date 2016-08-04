@@ -12,7 +12,7 @@
 
 class DTSegtoRPC {
 public:
-  DTSegtoRPC(DTRecSegment4DCollection const* all4DSegments, edm::EventSetup const& iSetup, bool debug, double eyr);
+  DTSegtoRPC(DTRecSegment4DCollection const* all4DSegments, edm::EventSetup const& iSetup, double eyr);
   ~DTSegtoRPC();
   std::unique_ptr<RPCRecHitCollection> && thePoints(){ return std::move(_ThePoints); }
 
