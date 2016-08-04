@@ -10,7 +10,7 @@ rpcPointProducer = cms.EDProducer("RPCPointProducer",
   rangestrips = cms.untracked.double(4.),
   rangestripsRB4 = cms.untracked.double(4.),
   MinCosAng = cms.untracked.double(0.85),
-  MaxD = cms.untracked.double(80.0),
+  MaxD = cms.untracked.double(90.0),
   MaxDrb4 = cms.untracked.double(150.0),
   ExtrapolatedRegion = cms.untracked.double(0.6), #in stripl/2 in Y and stripw*nstrips/2 in X
 
