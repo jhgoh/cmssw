@@ -92,7 +92,7 @@ CSCSegtoRPC::CSCSegtoRPC(const CSCSegmentCollection * allCSCSegments, const edm:
       const float stripl = topo->stripLength();
 
       const float extrapolatedDistance = sqrt((X-Xo)*(X-Xo)+(Y-Yo)*(Y-Yo)+(Z-Zo)*(Z-Zo));
-      if(extrapolatedDistance < MaxD) continue;
+      if(extrapolatedDistance > MaxD) continue;
 
       const GlobalPoint GlobalPointExtrapolated=TheChamber->toGlobal(LocalPoint(X,Y,Z));
       const LocalPoint PointExtrapolatedRPCFrame = RPCSurface.toLocal(GlobalPointExtrapolated);
