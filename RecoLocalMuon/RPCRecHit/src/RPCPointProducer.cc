@@ -71,7 +71,7 @@ void RPCPointProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::Eve
     edm::Handle<reco::TrackCollection> alltracks;
     iEvent.getByToken(tracks,alltracks);
     if(!(alltracks->empty())){
-      TracktoRPC TrackClass(alltracks.product(), iSetup, debug, trackTransformerParam, tracks_);
+      TracktoRPC TrackClass(alltracks.product(), iSetup, trackTransformerParam, tracks_);
       iEvent.put(TrackClass.thePoints(), "RPCTrackExtrapolatedPoints");
     }else{
       if(debug) std::cout<<"RPCHLT Invalid Tracks collection"<<std::endl;
