@@ -9,6 +9,7 @@
 #include "DataFormats/Common/interface/View.h"
 #include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "HepPDT/ParticleID.hh"
 
 
 MergedGenParticleProducer::MergedGenParticleProducer(const edm::ParameterSet& config){
@@ -69,9 +70,17 @@ void MergedGenParticleProducer::produce(edm::Event& event,
       }
     }
   }
+  
+  // check for photons from pruned (light) hadrons
+  unsigned nPhotonsFromPrunedHadron = 0;
+  for (unsigned j = 0; j < packed_handle->size(); ++j) {
+    pat::PackedGenParticle const& pk = packed_handle->at(j);
+    if (isPhotonFromPrunedHadron(pk))
+      ++nPhotonsFromPrunedHadron;
+  }
 
   // At this point we know what the size of the merged GenParticle will be so we can create it
-  unsigned n = pruned_handle->size() + (packed_handle->size() - st1_dup_map.size());
+  unsigned n = pruned_handle->size() + (packed_handle->size() - st1_dup_map.size()) + nPhotonsFromPrunedHadron;
   auto cands = std::unique_ptr<reco::GenParticleCollection>(new reco::GenParticleCollection(n));
 
   // First copy in all the pruned candidates
@@ -96,11 +105,30 @@ void MergedGenParticleProducer::produce(edm::Event& event,
     if (st1_dup_map.count(&pk)) continue;
     reco::GenParticle & new_cand = cands->at(idx);
     new_cand = reco::GenParticle(pk.charge(), pk.p4(), pk.vertex(), pk.pdgId(), 1, true);
+    // Insert dummy pi0 mothers for orphaned photons
+    if (isPhotonFromPrunedHadron(pk)) {
+      ++idx;
+      reco::GenParticle & dummy_mother = cands->at(idx);
+      dummy_mother = reco::GenParticle(0, pk.p4(), pk.vertex(), 111, 2, true);
+      for (unsigned m = 0; m < pk.numberOfMothers(); ++m) {
+        new_cand.addMother(reco::GenParticleRef(ref_, idx));
+        // Since the packed candidates drop the vertex position we'll take this from the mother
+        if (m == 0) {
+          dummy_mother.setP4(pk.mother(m)->p4());
+          dummy_mother.setVertex(pk.mother(m)->vertex());
+          new_cand.setVertex(pk.mother(m)->vertex());
+        }
+        // Should then add the GenParticle as a daughter of its dummy mother
+        dummy_mother.addDaughter(reco::GenParticleRef(ref_, idx-1));
+      }
+    }
+    // Connect to mother from pruned particles
+    reco::GenParticle & daughter = cands->at(idx);
     for (unsigned m = 0; m < pk.numberOfMothers(); ++m) {
-      new_cand.addMother(reco::GenParticleRef(ref_, pruned_idx_map.at(pk.mother(m))));
+      daughter.addMother(reco::GenParticleRef(ref_, pruned_idx_map.at(pk.mother(m))));
       // Since the packed candidates drop the vertex position we'll take this from the mother
       if (m == 0) {
-        new_cand.setVertex(pk.mother(m)->vertex());
+        daughter.setVertex(pk.mother(m)->vertex());
       }
       // Should then add this GenParticle as a daughter of its mother
       cands->at(pruned_idx_map.at(pk.mother(m))).addDaughter(reco::GenParticleRef(ref_, idx));
@@ -116,5 +144,15 @@ void MergedGenParticleProducer::beginJob() {
 }
 
 void MergedGenParticleProducer::endJob() {}
+
+bool MergedGenParticleProducer::isPhotonFromPrunedHadron(pat::PackedGenParticle pk) {
+  HepPDT::ParticleID motherid(pk.mother(0)->pdgId());
+  return
+    ( pk.pdgId() == 22 // We care about photons for lepton dressing here
+      and pk.statusFlags().isDirectHadronDecayProduct() // Gen status flag seems correct
+      // Catch cases where miniaod mother is not compatible with the status flag
+      and not (motherid.isHadron() and pk.mother(0)->status() == 2)
+    );
+}
 
 DEFINE_FWK_MODULE(MergedGenParticleProducer);

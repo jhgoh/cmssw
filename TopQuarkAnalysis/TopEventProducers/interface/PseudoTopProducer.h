@@ -7,10 +7,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "DataFormats/Candidate/interface/Candidate.h"
-#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
-
-#include "fastjet/JetDefinition.hh"
-#include <set>
+#include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 
 class PseudoTopProducer : public edm::stream::EDProducer<>
 {
@@ -19,29 +16,22 @@ public:
   void produce(edm::Event& event, const edm::EventSetup& eventSetup) override;
 
 private:
-  bool isFromHadron(const reco::Candidate* p) const;
-  bool isBHadron(const reco::Candidate* p) const;
-  bool isBHadron(const unsigned int pdgId) const;
-  void insertAllDaughters(const reco::Candidate* p, std::set<const reco::Candidate*>& list) const;
+  template<typename T> reco::Candidate::LorentzVector p4(const T& p) const
+  {
+    return reco::Candidate::LorentzVector(p.px(), p.py(), p.pz(), p.energy());
+  }
 
-  const reco::Candidate* getLast(const reco::Candidate* p);
-  reco::GenParticleRef buildGenParticle(const reco::Candidate* p, reco::GenParticleRefProd& refHandle,
-                                        std::auto_ptr<reco::GenParticleCollection>& outColl) const;
-  typedef reco::Particle::LorentzVector LorentzVector;
+  const edm::EDGetTokenT<edm::HepMCProduct> srcToken_;
 
-private:
-  const edm::EDGetTokenT<edm::View<reco::Candidate> > finalStateToken_;
-  const edm::EDGetTokenT<edm::View<reco::Candidate> > genParticleToken_;
-  const double minLeptonPt_, maxLeptonEta_, minJetPt_, maxJetEta_;
+  const double leptonConeSize_, jetConeSize_;
   const double wMass_, tMass_;
+  const double minLeptonPt_, maxLeptonEta_, minJetPt_, maxJetEta_;
   const double minLeptonPtDilepton_, maxLeptonEtaDilepton_;
   const double minDileptonMassDilepton_;
   const double minLeptonPtSemilepton_, maxLeptonEtaSemilepton_;
   const double minVetoLeptonPtSemilepton_, maxVetoLeptonEtaSemilepton_;
   const double minMETSemiLepton_, minMtWSemiLepton_;
 
-  typedef fastjet::JetDefinition JetDef;
-  std::shared_ptr<JetDef> fjLepDef_, fjJetDef_;
   reco::Particle::Point genVertex_;
 
 };
