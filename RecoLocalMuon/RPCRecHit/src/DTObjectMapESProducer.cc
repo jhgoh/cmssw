@@ -1,5 +1,7 @@
 // system include files
 #include <memory>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 // user include files
 #include "FWCore/Framework/interface/ESProducer.h"
@@ -19,8 +21,8 @@ public:
   ~DTObjectMapESProducer() {
   }
 
-  std::shared_ptr<DTObjectMap> produce(MuonGeometryRecord const& record) {
-    return std::make_shared<DTObjectMap>(record);
+  boost::shared_ptr<DTObjectMap> produce(MuonGeometryRecord const& record) {
+    return boost::make_shared<DTObjectMap>(record);
   }
 
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
