@@ -24,7 +24,6 @@ CSCSegtoRPC::CSCSegtoRPC(const CSCSegmentCollection * allCSCSegments, const edm:
 
   const double MaxD=80.;
 
-  if(debug) std::cout<<"CSC \t Number of CSC Segments in this event = "<<allCSCSegments->size()<<std::endl;
   _ThePoints = std::make_unique<RPCRecHitCollection>();
 
   if(allCSCSegments->size()==0) return;
