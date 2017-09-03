@@ -16,7 +16,7 @@
 
 class TracktoRPC {
 public:
-  TracktoRPC(reco::TrackCollection const* alltracks, edm::EventSetup const& iSetup, const edm::ParameterSet& iConfig, const edm::InputTag & tracklabel);
+  TracktoRPC(const reco::TrackCollection* alltracks, const edm::EventSetup& iSetup, const edm::ParameterSet& iConfig, const edm::InputTag & tracklabel);
   ~TracktoRPC() = default;
   std::unique_ptr<RPCRecHitCollection> && thePoints(){ return std::move(_ThePoints); }
 

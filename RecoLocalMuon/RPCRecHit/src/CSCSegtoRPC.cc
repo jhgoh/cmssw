@@ -68,7 +68,7 @@ CSCSegtoRPC::CSCSegtoRPC(const CSCSegmentCollection * allCSCSegments, const edm:
 
     if(rpcRing==1) continue; //They don't exist!
 
-    assert(rollsForThisCSC.size()>=1);
+    assert(!rollsForThisCSC.empty());
 
     for ( auto iteraRoll : rollsForThisCSC ) {
       const RPCRoll* rollasociated = rpcGeo->roll(iteraRoll);

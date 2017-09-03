@@ -86,7 +86,7 @@ DTSegtoRPC::DTSegtoRPC(const DTRecSegment4DCollection * all4DSegments, const edm
     DTStationIndex theindex(0,dtWheel,dtSector,dtStation);
     std::set<RPCDetId> rollsForThisDT = dtMap->getRolls(theindex);
 
-    assert(rollsForThisDT.size()>=1);
+    assert(!rollsForThisDT.empty());
 
     for ( auto iteraRoll : rollsForThisDT ) {
       const RPCRoll* rollasociated = rpcGeo->roll(iteraRoll);
@@ -145,8 +145,8 @@ DTSegtoRPC::DTSegtoRPC(const DTRecSegment4DCollection * all4DSegments, const edm
     LocalVector segmentDirection=segment.localDirection();
 
     if(segment.dimension()!=2) continue;
-    LocalVector segmentDirectionMB4=segmentDirection;
-    LocalPoint segmentPositionMB4=segmentPosition;
+    const LocalVector& segmentDirectionMB4=segmentDirection;
+    const LocalPoint& segmentPositionMB4=segmentPosition;
 
     const BoundPlane& DTSurface4 = dtGeo->idToDet(DTId)->surface();
 
@@ -189,7 +189,7 @@ DTSegtoRPC::DTSegtoRPC(const DTRecSegment4DCollection * all4DSegments, const edm
       DTStationIndex theindex(0,dtWheel,dtSector,dtStation);
       std::set<RPCDetId> rollsForThisDT = dtMap->getRolls(theindex);
 
-      assert(rollsForThisDT.size()>=1);
+      assert(!rollsForThisDT.empty());
 
       for (auto iteraRoll : rollsForThisDT ) {
         const RPCRoll* rollasociated = rpcGeo->roll(iteraRoll); //roll asociado a MB4

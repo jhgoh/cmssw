@@ -110,8 +110,8 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           const BoundPlane & DTSurface = dtlayer->surface();
           const GlobalPoint dcPoint = DTSurface.toGlobal(LocalPoint(0.,0.,0.));
 
-          TrajectoryMeasurement tMt = trajectory.closestMeasurement(dcPoint);
-          TrajectoryStateOnSurface upd2 = (tMt).updatedState();
+          const TrajectoryMeasurement& tMt = trajectory.closestMeasurement(dcPoint);
+          const TrajectoryStateOnSurface& upd2 = (tMt).updatedState();
           if ( !upd2.isValid() ) continue;
 
           LocalPoint trajLP = upd2.localPosition();
@@ -151,8 +151,8 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           const BoundPlane & CSCSurface = csclayer->surface();
           const GlobalPoint dcPoint = CSCSurface.toGlobal(LocalPoint(0.,0.,0.));
 
-          TrajectoryMeasurement tMt = trajectory.closestMeasurement(dcPoint);
-          TrajectoryStateOnSurface upd2 = (tMt).updatedState();
+          const TrajectoryMeasurement& tMt = trajectory.closestMeasurement(dcPoint);
+          const TrajectoryStateOnSurface& upd2 = (tMt).updatedState();
           if ( !upd2.isValid() ) continue;
 
           if ( cscid.station()==4 || cscid.ring()==1 ) continue;
@@ -257,8 +257,8 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           const BoundPlane & DTSurface = dtlayer->surface();
           const GlobalPoint dcPoint = DTSurface.toGlobal(LocalPoint(0.,0.,0.));
 
-          TrajectoryMeasurement tMt = trajectory.closestMeasurement(dcPoint);
-          TrajectoryStateOnSurface upd2 = (tMt).updatedState();
+          const TrajectoryMeasurement& tMt = trajectory.closestMeasurement(dcPoint);
+          const TrajectoryStateOnSurface& upd2 = (tMt).updatedState();
           if ( !upd2.isValid()) continue;
 
           TrajectoryStateOnSurface ptss =  thePropagator->propagate(upd2, rpcGeo->idToDet(rpcroll2)->surface());
@@ -304,8 +304,8 @@ TracktoRPC::TracktoRPC(const reco::TrackCollection * alltracks, const edm::Event
           const BoundPlane & CSCSurface = csclayer->surface();
           const GlobalPoint dcPoint = CSCSurface.toGlobal(LocalPoint(0.,0.,0.));
 
-          TrajectoryMeasurement tMt = trajectory.closestMeasurement(dcPoint);
-          TrajectoryStateOnSurface upd2 = (tMt).updatedState();
+          const TrajectoryMeasurement& tMt = trajectory.closestMeasurement(dcPoint);
+          const TrajectoryStateOnSurface& upd2 = (tMt).updatedState();
           if ( !upd2.isValid() ) continue;
 
           TrajectoryStateOnSurface ptss =  thePropagator->propagate(upd2, rpcGeo->idToDet(rpcroll2)->surface());
