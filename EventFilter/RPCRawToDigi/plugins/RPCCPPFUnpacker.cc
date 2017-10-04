@@ -1,5 +1,7 @@
 #include "EventFilter/RPCRawToDigi/plugins/RPCCPPFUnpacker.h"
 
+#include <algorithm>
+
 #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -25,6 +27,7 @@ RPCCPPFUnpacker::RPCCPPFUnpacker(edm::stream::EDProducerBase & producer, edm::Pa
     , bx_max_(config.getParameter<int>("bxMax"))
 {
     producer.produces<RPCDigiCollection>();
+    producer.produces<RPCCPPFDigiCollection>();
     if (fill_counters_) {
         producer.produces<RPCAMCLinkCounters>("RPCAMCUnpacker");
     }
@@ -50,14 +53,17 @@ void RPCCPPFUnpacker::produce(edm::Event & event, edm::EventSetup const & setup
     setup.get<RPCLBLinkMapRcd>().get(es_lb_link_map_);
 
     std::set<std::pair<RPCDetId, RPCDigi> > rpc_digis;
+    std::unique_ptr<RPCCPPFDigiCollection> rpc_cppf_digis(new RPCCPPFDigiCollection());
     std::unique_ptr<RPCAMCLinkCounters> counters(new RPCAMCLinkCounters());
 
     for (std::pair<RPCAMCLink const, rpcamc13::AMCPayload> const & payload : amc_payload) {
         processCPPF(payload.first, payload.second
-                    , *counters, rpc_digis);
+                    , *counters, rpc_digis, *rpc_cppf_digis);
     }
 
     putRPCDigis(event, rpc_digis);
+    std::sort(rpc_cppf_digis->begin(), rpc_cppf_digis->end());
+    event.put(std::move(rpc_cppf_digis));
     if (fill_counters_) {
         event.put(std::move(counters), "RPCAMCUnpacker");
     }
@@ -65,7 +71,8 @@ void RPCCPPFUnpacker::produce(edm::Event & event, edm::EventSetup const & setup
 
 bool RPCCPPFUnpacker::processCPPF(RPCAMCLink const & link, rpcamc13::AMCPayload const & payload
                                   , RPCAMCLinkCounters & counters
-                                  , std::set<std::pair<RPCDetId, RPCDigi> > & digis) const
+                                  , std::set<std::pair<RPCDetId, RPCDigi> > & rpc_digis
+                                  , RPCCPPFDigiCollection & rpc_cppf_digis) const
 {
     LogDebug("RPCCPPFRawToDigi") << "CPPF " << link
                                  << ", size " << payload.getData().size();
@@ -89,9 +96,9 @@ bool RPCCPPFUnpacker::processCPPF(RPCAMCLink const & link, rpcamc13::AMCPayload 
 
     unsigned int pos(0), length(0);
     unsigned int caption_id(0);
-    bool zs_per_bx(false);
-    unsigned int bx_length(0);
-    // unsigned int block_id(0), bx_id(0);
+    bool zs_per_bx(false), have_bx_header(false);
+    unsigned int bx_words(0);
+    unsigned int block_id(0);
     std::uint32_t records[2];
     for ( ; word != word_end ; ++word) {
         records[0] = *word & 0xffffffff;
@@ -109,21 +116,20 @@ bool RPCCPPFUnpacker::processCPPF(RPCAMCLink const & link, rpcamc13::AMCPayload 
                 length = block_header.getLength();
                 caption_id = block_header.getCaptionId();
                 zs_per_bx = block_header.hasZeroSuppressionPerBX();
-                bx_length = 0;
-                // block_id = block_header.getId();
-                // bx_id = 0;
-            } else if (zs_per_bx && bx_length == 0) {
-                rpcmp7::BXHeader bx_header(*record);
-                // bx_id = bx_header.getId();
-                bx_length = 6;
+                have_bx_header = false;
+                bx_words = 6;
+                block_id = block_header.getId();
+            } else if (zs_per_bx && !have_bx_header) {
+                // rpcmp7::BXHeader bx_header(*record);
+                have_bx_header = true;
             } else {
                 if (caption_id == 0x01) { // RX
-                    processRXRecord(link, bx_counter_mod, rpccppf::RXRecord(*record), counters, digis, bx_min, bx_max);
+                    processRXRecord(link, bx_counter_mod, rpccppf::RXRecord(*record), counters, rpc_digis, bx_min, bx_max);
                 } else if (caption_id == 0x02) { // TX
-                    // use block_id for index, bx_id for relative bx
+                    processTXRecord(link, block_id, 6 - bx_words, rpccppf::TXRecord(*record), rpc_cppf_digis);
                 }
                 ++pos;
-                --bx_length;
+                --bx_words;
             }
         }
     }
@@ -135,7 +141,7 @@ void RPCCPPFUnpacker::processRXRecord(RPCAMCLink link
                                       , unsigned int bx_counter_mod
                                       , rpccppf::RXRecord const & record
                                       , RPCAMCLinkCounters & counters
-                                      , std::set<std::pair<RPCDetId, RPCDigi> > & digis
+                                      , std::set<std::pair<RPCDetId, RPCDigi> > & rpc_digis
                                       , int bx_min, int bx_max) const
 {
     LogDebug("RPCCPPFRawToDigi") << "RXRecord " << std::hex << record.getRecord() << std::dec << std::endl;
@@ -235,7 +241,7 @@ void RPCCPPFUnpacker::processRXRecord(RPCAMCLink link
         if (data & (0x1 << channel)) {
             unsigned int strip(feb_connector.getStrip(channel + channel_offset));
             if (strip) {
-                digis.insert(std::pair<RPCDetId, RPCDigi>(det_id, RPCDigi(strip, bx)));
+                rpc_digis.insert(std::pair<RPCDetId, RPCDigi>(det_id, RPCDigi(strip, bx)));
                 LogDebug("RPCCPPFRawToDigi") << "RPCDigi " << det_id.rawId()
                                              << ", " << strip << ", " << bx;
             }
@@ -243,26 +249,60 @@ void RPCCPPFUnpacker::processRXRecord(RPCAMCLink link
     }
 }
 
+void RPCCPPFUnpacker::processTXRecord(RPCAMCLink link
+                                      , unsigned int block
+                                      , unsigned int word
+                                      , rpccppf::TXRecord const & record
+                                      , RPCCPPFDigiCollection & rpc_cppf_digis) const
+{
+    if (!record.isValid(0) && !record.isValid(1)) {
+        return;
+    }
+
+    // This translation should become part of a CondFormat
+    if (word > 5) {
+        return;
+    }
+    static int const ring[6] = {2, 2, 2, 3, 2, 3};
+    static int const station[6] = {1, 2, 3, 3, 4, 4};
+    int region(link.getAMCNumber() < 7 ? 1 : -1);
+    unsigned int endcap_sector((35 + (link.getAMCNumber() - (region > 0 ? 3 : 7)) * 9 + (block >> 1)) % 36 + 1);
+    RPCDetId rpc_id(region
+                    , ring[word] // ring
+                    , station[word] // station
+                    , (endcap_sector / 6) + 1 // sector
+                    , 1 // layer
+                    , (endcap_sector - 1) % 6 + 1 // subsector
+                    , 0); // roll
+
+    if (record.isValid(0)) {
+        rpc_cppf_digis.push_back(RPCCPPFDigi(rpc_id, 0, record.getTheta(0), record.getPhi(0)));
+    }
+    if (record.isValid(1)) {
+        rpc_cppf_digis.push_back(RPCCPPFDigi(rpc_id, 0, record.getTheta(1), record.getPhi(1)));
+    }
+}
+
 void RPCCPPFUnpacker::putRPCDigis(edm::Event & event
-                                  , std::set<std::pair<RPCDetId, RPCDigi> > const & digis) const
+                                  , std::set<std::pair<RPCDetId, RPCDigi> > const & rpc_digis) const
 {
     std::unique_ptr<RPCDigiCollection> rpc_digi_collection(new RPCDigiCollection());
     RPCDetId rpc_det_id;
-    std::vector<RPCDigi> local_digis;
-    for (std::pair<RPCDetId, RPCDigi> const & rpc_digi : digis) {
+    std::vector<RPCDigi> local_rpc_digis;
+    for (std::pair<RPCDetId, RPCDigi> const & rpc_digi : rpc_digis) {
         LogDebug("RPCCPPFRawToDigi") << "RPCDigi " << rpc_digi.first.rawId()
                                      << ", " << rpc_digi.second.strip() << ", " << rpc_digi.second.bx();
         if (rpc_digi.first != rpc_det_id) {
-            if (!local_digis.empty()) {
-                rpc_digi_collection->put(RPCDigiCollection::Range(local_digis.begin(), local_digis.end()), rpc_det_id);
-                local_digis.clear();
+            if (!local_rpc_digis.empty()) {
+                rpc_digi_collection->put(RPCDigiCollection::Range(local_rpc_digis.begin(), local_rpc_digis.end()), rpc_det_id);
+                local_rpc_digis.clear();
             }
             rpc_det_id = rpc_digi.first;
         }
-        local_digis.push_back(rpc_digi.second);
+        local_rpc_digis.push_back(rpc_digi.second);
     }
-    if (!local_digis.empty()) {
-        rpc_digi_collection->put(RPCDigiCollection::Range(local_digis.begin(), local_digis.end()), rpc_det_id);
+    if (!local_rpc_digis.empty()) {
+        rpc_digi_collection->put(RPCDigiCollection::Range(local_rpc_digis.begin(), local_rpc_digis.end()), rpc_det_id);
     }
 
     event.put(std::move(rpc_digi_collection));
