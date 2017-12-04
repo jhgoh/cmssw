@@ -74,7 +74,7 @@ bool RPCTwinMuxUnpacker::processTwinMux(RPCAMCLink const & link, rpcamc13::AMCPa
     }
 
     std::vector<std::uint64_t>::const_iterator word(payload.getData().begin());
-    rpctwinmux::Header header(&(*word));
+    rpctwinmux::TwinMuxHeader header(&(*word));
     ++word; ++word;
     std::vector<std::uint64_t>::const_iterator word_end(payload.getData().end());
     --word_end; // rpcamc::Trailer
@@ -90,16 +90,16 @@ bool RPCTwinMuxUnpacker::processTwinMux(RPCAMCLink const & link, rpcamc13::AMCPa
     bool has_first_rpc_word(false);
     rpctwinmux::RPCRecord rpc_record;
     for ( ; word != word_end ; ++word) {
-        unsigned int type(rpctwinmux::Record::getType(*word));
+        unsigned int type(rpctwinmux::TwinMuxRecord::getType(*word));
         LogDebug("RPCTwinMuxRawToDigi") << "TwinMux data type " << std::hex << type << std::dec;
-        if (type == rpctwinmux::Record::rpc_first_type_) {
+        if (type == rpctwinmux::TwinMuxRecord::rpc_first_type_) {
             if (has_first_rpc_word) {
                 processRPCRecord(link, bx_counter, rpc_record, counters, digis, bx_min, bx_max, 0, 1);
             }
             rpc_record.reset();
             rpc_record.set(0, *word);
             has_first_rpc_word = true;
-        } else if (type == rpctwinmux::Record::rpc_second_type_) {
+        } else if (type == rpctwinmux::TwinMuxRecord::rpc_second_type_) {
             if (!has_first_rpc_word) {
                 edm::LogWarning("RPCTwinMuxRawToDigi") << "Received second RPC word without first";
             } else {
