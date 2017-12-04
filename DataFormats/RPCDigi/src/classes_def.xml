@@ -36,4 +36,10 @@
 </class>
 <class name="edm::Wrapper<RPCAMCLinkCounters>" />
 
+<class name="RPCCPPFDigi" ClassVersion="3">
+  <version ClassVersion="3" checksum="3541353469" />
+</class>
+<class name="std::vector<RPCCPPFDigi>" />
+<class name="edm::Wrapper<std::vector<RPCCPPFDigi> >" />
+
 </lcgdict>

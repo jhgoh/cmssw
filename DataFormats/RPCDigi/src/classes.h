@@ -4,6 +4,7 @@
 #include "DataFormats/RPCDigi/interface/RPCRawSynchro.h"
 #include "DataFormats/RPCDigi/interface/RPCDigiL1Link.h"
 #include "DataFormats/RPCDigi/interface/RPCAMCLinkCounters.h"
+#include <DataFormats/RPCDigi/interface/RPCCPPFDigi.h>
 
 #include <DataFormats/Common/interface/Wrapper.h>
 #include <vector>
@@ -41,5 +42,9 @@ namespace DataFormats_RPCDigi {
     std::pair<std::pair<unsigned int, std::uint32_t>, unsigned int> ppuuu;
     std::map<std::pair<unsigned int, std::uint32_t>, unsigned int> mpuuu;
     edm::Wrapper<RPCAMCLinkCounters> ralc;
+
+    RPCCPPFDigi rcd;
+    std::vector<RPCCPPFDigi> vrcd;
+    edm::Wrapper<std::vector<RPCCPPFDigi> > wvrcd;
   };
 }

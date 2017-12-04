@@ -1,0 +1,51 @@
+#ifndef DataFormats_RPCDigi_RPCCPPFDigi_icc
+#define DataFormats_RPCDigi_RPCCPPFDigi_icc
+
+#include "DataFormats/RPCDigi/interface/RPCCPPFDigi.h"
+
+inline RPCDetId const & RPCCPPFDigi::getRPCDetId() const
+{
+    return rpc_id_;
+}
+
+inline int RPCCPPFDigi::getBX() const
+{
+    return bx_;
+}
+
+inline unsigned int RPCCPPFDigi::getTheta() const
+{
+    return theta_;
+}
+
+inline unsigned int RPCCPPFDigi::getPhi() const
+{
+    return phi_;
+}
+
+inline bool RPCCPPFDigi::isValid() const
+{
+    return (theta_ < 0x1f && phi_ < 0x7ff);
+}
+
+inline void RPCCPPFDigi::setRPCDetId(RPCDetId const & rpc_id)
+{
+    rpc_id_ = rpc_id;
+}
+
+inline void RPCCPPFDigi::setBX(int bx)
+{
+    bx_ = bx;
+}
+
+inline void RPCCPPFDigi::setTheta(int theta)
+{
+    theta_ = theta;
+}
+
+inline void RPCCPPFDigi::setPhi(int phi)
+{
+    phi_ = phi;
+}
+
+#endif // DataFormats_RPCDigi_RPCCPPFDigi_icc
