@@ -13,7 +13,7 @@
 #include "CondFormats/RPCObjects/interface/RPCLBLinkMap.h"
 #include "DataFormats/MuonDetId/interface/RPCDetId.h"
 #include "DataFormats/RPCDigi/interface/RPCDigi.h"
-#include "DataFormats/RPCDigi/interface/RPCCPPFDigi.h"
+#include "DataFormats/L1TMuon/interface/CPPFDigi.h"
 #include "EventFilter/RPCRawToDigi/interface/RPCAMC13Record.h"
 #include "EventFilter/RPCRawToDigi/interface/RPCCPPFRecord.h"
 #include "EventFilter/RPCRawToDigi/plugins/RPCAMCUnpacker.h"
@@ -34,7 +34,7 @@ protected:
     bool processCPPF(RPCAMCLink const & link, rpcamc13::AMCPayload const & payload
                      , RPCAMCLinkCounters & counters
                      , std::set<std::pair<RPCDetId, RPCDigi> > & rpc_digis
-                     , RPCCPPFDigiCollection & rpc_cppf_digis) const;
+                     , l1t::CPPFDigiCollection & rpc_cppf_digis) const;
     void processRXRecord(RPCAMCLink link
                          , unsigned int bx_counter_mod
                          , rpccppf::RXRecord const & record
@@ -45,7 +45,7 @@ protected:
                          , unsigned int block
                          , unsigned int word
                          , rpccppf::TXRecord const & record
-                         , RPCCPPFDigiCollection & rpc_cppf_digis) const;
+                         , l1t::CPPFDigiCollection & rpc_cppf_digis) const;
     void putRPCDigis(edm::Event & event
                      , std::set<std::pair<RPCDetId, RPCDigi> > const & digis) const;
 

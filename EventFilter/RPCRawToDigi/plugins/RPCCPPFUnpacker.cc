@@ -27,7 +27,7 @@ RPCCPPFUnpacker::RPCCPPFUnpacker(edm::stream::EDProducerBase & producer, edm::Pa
     , bx_max_(config.getParameter<int>("bxMax"))
 {
     producer.produces<RPCDigiCollection>();
-    producer.produces<RPCCPPFDigiCollection>();
+    producer.produces<l1t::CPPFDigiCollection>();
     if (fill_counters_) {
         producer.produces<RPCAMCLinkCounters>("RPCAMCUnpacker");
     }
@@ -53,7 +53,7 @@ void RPCCPPFUnpacker::produce(edm::Event & event, edm::EventSetup const & setup
     setup.get<RPCLBLinkMapRcd>().get(es_lb_link_map_);
 
     std::set<std::pair<RPCDetId, RPCDigi> > rpc_digis;
-    std::unique_ptr<RPCCPPFDigiCollection> rpc_cppf_digis(new RPCCPPFDigiCollection());
+    std::unique_ptr<l1t::CPPFDigiCollection> rpc_cppf_digis(new l1t::CPPFDigiCollection());
     std::unique_ptr<RPCAMCLinkCounters> counters(new RPCAMCLinkCounters());
 
     for (std::pair<RPCAMCLink const, rpcamc13::AMCPayload> const & payload : amc_payload) {
@@ -72,9 +72,9 @@ void RPCCPPFUnpacker::produce(edm::Event & event, edm::EventSetup const & setup
 bool RPCCPPFUnpacker::processCPPF(RPCAMCLink const & link, rpcamc13::AMCPayload const & payload
                                   , RPCAMCLinkCounters & counters
                                   , std::set<std::pair<RPCDetId, RPCDigi> > & rpc_digis
-                                  , RPCCPPFDigiCollection & rpc_cppf_digis) const
+                                  , l1t::CPPFDigiCollection & rpc_cppf_digis) const
 {
-    LogDebug("RPCCPPFRawToDigi") << "CPPF " << link
+    LogDebug("RPCCPPFRawToDigi") << "RPCCPPF " << link
                                  << ", size " << payload.getData().size();
 
     if (!payload.isValid()) {
@@ -182,7 +182,7 @@ void RPCCPPFUnpacker::processRXRecord(RPCAMCLink link
         if (fill_counters_ && bx_offset == 0) {
             counters.add(RPCAMCLinkEvents::amc_link_invalid_, RPCAMCLink(fed, amc_number));
         }
-        LogDebug("RPCCPPFRawToDigi") << "Skipping unknown CPPFLink " << link;
+        LogDebug("RPCCPPFRawToDigi") << "Skipping unknown RPCCPPFLink " << link;
         return;
     }
 
@@ -253,7 +253,7 @@ void RPCCPPFUnpacker::processTXRecord(RPCAMCLink link
                                       , unsigned int block
                                       , unsigned int word
                                       , rpccppf::TXRecord const & record
-                                      , RPCCPPFDigiCollection & rpc_cppf_digis) const
+                                      , l1t::CPPFDigiCollection & rpc_cppf_digis) const
 {
     if (!record.isValid(0) && !record.isValid(1)) {
         return;
@@ -276,10 +276,10 @@ void RPCCPPFUnpacker::processTXRecord(RPCAMCLink link
                     , 0); // roll
 
     if (record.isValid(0)) {
-        rpc_cppf_digis.push_back(RPCCPPFDigi(rpc_id, 0, record.getTheta(0), record.getPhi(0)));
+        rpc_cppf_digis.push_back(l1t::CPPFDigi(rpc_id, 0, record.getTheta(0), record.getPhi(0)));
     }
     if (record.isValid(1)) {
-        rpc_cppf_digis.push_back(RPCCPPFDigi(rpc_id, 0, record.getTheta(1), record.getPhi(1)));
+        rpc_cppf_digis.push_back(l1t::CPPFDigi(rpc_id, 0, record.getTheta(1), record.getPhi(1)));
     }
 }
 
