@@ -11,3 +11,5 @@ DEFINE_FWK_MODULE(RPCTTUMonitor);
 DEFINE_FWK_MODULE(RPCEfficiency);
 #include "DQM/RPCMonitorDigi/interface/RPCDcsInfo.h"
 DEFINE_FWK_MODULE(RPCDcsInfo);
+#include "DQM/RPCMonitorDigi/interface/RPCEfficiencyTagProbe.h"
+DEFINE_FWK_MODULE(RPCEfficiencyTagProbe);

@@ -43,3 +43,6 @@ DEFINE_FWK_MODULE(RPCDCSSummary);
 
 #include <DQM/RPCMonitorClient/interface/RPCDataCertification.h>
 DEFINE_FWK_MODULE(RPCDataCertification);
+
+#include <DQM/RPCMonitorClient/interface/RPCEfficiencyClientTagProbe.h>
+DEFINE_FWK_MODULE(RPCEfficiencyClientTagProbe);

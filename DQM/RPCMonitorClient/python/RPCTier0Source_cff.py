@@ -11,7 +11,7 @@ from DQM.RPCMonitorClient.RPCMonitorRaw_cfi import *
 from DQM.RPCMonitorClient.RPCMonitorLinkSynchro_cfi import *
 
 # Efficiency
-from DQM.RPCMonitorDigi.RPCEfficiency_cfi import *
+from DQM.RPCMonitorDigi.RPCEfficiencyTagProbe_cfi import *
 
 # DQM Services
 from DQMServices.Core.DQMEDAnalyzer import DQMEDAnalyzer

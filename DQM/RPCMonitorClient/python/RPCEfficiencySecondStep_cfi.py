@@ -7,6 +7,11 @@ rpcEfficiencySecond = DQMEDHarvester("RPCEfficiencySecond",
     debug = cms.untracked.bool(False),
 )
 
-rpcefficiencysecond = cms.Sequence(rpcEfficiencySecond)
+rpcEfficiencyClientTagProbe = DQMEDHarvester("RPCEfficiencyClientTagProbe",
+    minNExtrapolation = cms.untracked.uint32(100),
+)
+
+#rpcefficiencysecond = cms.Sequence(rpcEfficiencySecond)
+rpcefficiencysecond = cms.Sequence(rpcEfficiencyClientTagProbe)
 
 
