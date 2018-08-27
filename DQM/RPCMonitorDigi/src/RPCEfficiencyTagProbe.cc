@@ -103,8 +103,6 @@ void RPCEfficiencyTagProbe::analyze(const edm::Event& event, const edm::EventSet
   edm::Handle<trigger::TriggerEvent> triggerEventHandle;
   event.getByToken(triggerEventToken_, triggerEventHandle);
 
-  reco::MuonRef tagRef;
-  reco::MuonRef probeRef;
   const reco::Vertex* goodPV = nullptr;
   for ( auto& pv : *pvHandle ) {
     if ( !pv.isFake() and pv.ndof() >= 4.0 and
@@ -133,8 +131,8 @@ void RPCEfficiencyTagProbe::analyze(const edm::Event& event, const edm::EventSet
       else if ( std::find(stmodules.begin(), stmodules.end(), module) != stmodules.end() ) modules.insert(module);
     }
   }
-  std::vector<math::XYZTLorentzVector> triggerObjectP4s;
 
+  std::vector<math::XYZTLorentzVector> triggerObjectP4s;
   const auto& triggerObjects = triggerEventHandle->getObjects();
   for ( size_t keyIdx = 0; keyIdx < triggerEventHandle->sizeFilters(); ++keyIdx ) {
     if ( modules.count(triggerEventHandle->filterLabel(keyIdx)) == 0 ) continue;
@@ -147,6 +145,8 @@ void RPCEfficiencyTagProbe::analyze(const edm::Event& event, const edm::EventSet
   if ( triggerObjectP4s.empty() ) return;
 
   // Select best tag muon
+  reco::MuonRef tagRef;
+  reco::MuonRef probeRef;
   for ( int i=0, n=muonHandle->size(); i<n; ++i ) {
     const auto& mu = muonHandle->at(i);
     const double pt = mu.pt();
