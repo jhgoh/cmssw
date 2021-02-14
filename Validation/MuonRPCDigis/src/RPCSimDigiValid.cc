@@ -21,7 +21,7 @@ void RPCSimDigiValid::bookHistograms(DQMStore::IBooker& booker, edm::Run const& 
 {
   booker.setCurrentFolder("RPC/RPCDigisV");
 
-  hNEvents_ = booker.book1D("NEvents", "Number of events;;Events", 6, 1, 7);
+  hNEvents_ = booker.book1D("NEvents", "Number of events;;Events", 7, 1, 8);
   if ( TH1* h = hNEvents_->getTH1() ) {
     h->GetXaxis()->SetBinLabel(1, "All events");
     h->GetXaxis()->SetBinLabel(2, "has GenMuon");
