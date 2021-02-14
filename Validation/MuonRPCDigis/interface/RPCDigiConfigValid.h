@@ -1,14 +1,14 @@
-#ifndef Validation_MuonRPCDigis_RPCDigiPSetValid_h
-#define Validation_MuonRPCDigis_RPCDigiPSetValid_h
+#ifndef Validation_MuonRPCDigis_RPCDigiConfigValid_h
+#define Validation_MuonRPCDigis_RPCDigiConfigValid_h
 
 #include "DQMServices/Core/interface/DQMEDAnalyzer.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-class RPCDigiPSetValid : public DQMEDAnalyzer
+class RPCDigiConfigValid : public DQMEDAnalyzer
 {
 public:
-  RPCDigiPSetValid(const edm::ParameterSet& pset);
-  ~RPCDigiPSetValid() override = default;
+  RPCDigiConfigValid(const edm::ParameterSet& pset);
+  ~RPCDigiConfigValid() override = default;
 
 protected:
   void analyze(const edm::Event& event, const edm::EventSetup& eventSetup) override;
@@ -20,12 +20,15 @@ private:
 
   typedef MonitorElement* MEPtr;
   MEPtr hDigiModel1_, hDigiModel2_;
+  MEPtr hNoise_, hSignal_, hDoBkgNoise_;
 
   MEPtr hPropSpeed1_, hPropSpeed2_;
   MEPtr hTimeResol1_, hTimeResol2_;
   MEPtr hTimeJitter1_, hTimeJitter2_;
   MEPtr hEfficiency1_, hEfficiency2_;
   MEPtr hClusterSize1_, hClusterSize2_;
+  MEPtr hDigiElectron1_, hDigiElectron2_;
+  MEPtr hLinkGateWidth1_, hLinkGateWidth2_;
   MEPtr hIRPCTimeResol1_, hIRPCTimeResol2_;
   MEPtr hIRPCTimeJitter1_, hIRPCTimeJitter2_;
 };
