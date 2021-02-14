@@ -38,23 +38,6 @@ void RPCRecHitValid::bookHistograms(DQMStore::IBooker &booker, edm::Run const &r
   h_.bookHistograms(booker, subDir_);
 
   // SimHit plots, not compatible to RPCPoint-RPCRecHit comparison
-  booker.setCurrentFolder(subDir_ + "/HitProperty");
-  h_simParticleType = booker.book1D("SimHitPType", "SimHit particle type", 11, 0, 11);
-  h_simParticleType->getTH1()->SetMinimum(0);
-  if (TH1 *h = h_simParticleType->getTH1()) {
-    h->GetXaxis()->SetBinLabel(1, "#mu^{-}");
-    h->GetXaxis()->SetBinLabel(2, "#mu^{+}");
-    h->GetXaxis()->SetBinLabel(3, "e^{-}");
-    h->GetXaxis()->SetBinLabel(4, "e^{+}");
-    h->GetXaxis()->SetBinLabel(5, "#pi^{+}");
-    h->GetXaxis()->SetBinLabel(6, "#pi^{-}");
-    h->GetXaxis()->SetBinLabel(7, "K^{+}");
-    h->GetXaxis()->SetBinLabel(8, "K^{-}");
-    h->GetXaxis()->SetBinLabel(9, "p^{+}");
-    h->GetXaxis()->SetBinLabel(10, "p^{-}");
-    h->GetXaxis()->SetBinLabel(11, "Other");
-  }
-
   booker.setCurrentFolder(subDir_ + "/Track");
 
   h_nRPCHitPerSimMuon = booker.book1D("NRPCHitPerSimMuon", "Number of RPC SimHit per SimMuon", 11, -0.5, 10.5);
@@ -420,7 +403,6 @@ void RPCRecHitValid::analyze(const edm::Event &event, const edm::EventSetup &eve
       simHitsFromParticle.push_back(simParticleToHit->second);
     }
     const int nRPCHit = simHitsFromParticle.size();
-    const bool hasRPCHit = nRPCHit > 0;
 
     if (abs(simParticle->pdgId()) == 13) {
       muonSimHits.insert(muonSimHits.end(), simHitsFromParticle.begin(), simHitsFromParticle.end());
@@ -466,43 +448,6 @@ void RPCRecHitValid::analyze(const edm::Event &event, const edm::EventSetup &eve
       pthrSimHits.insert(pthrSimHits.end(), simHitsFromParticle.begin(), simHitsFromParticle.end());
     }
 
-    if (hasRPCHit) {
-      switch (simParticle->pdgId()) {
-        case 13:
-          h_simParticleType->Fill(0);
-          break;
-        case -13:
-          h_simParticleType->Fill(1);
-          break;
-        case 11:
-          h_simParticleType->Fill(2);
-          break;
-        case -11:
-          h_simParticleType->Fill(3);
-          break;
-        case 211:
-          h_simParticleType->Fill(4);
-          break;
-        case -211:
-          h_simParticleType->Fill(5);
-          break;
-        case 321:
-          h_simParticleType->Fill(6);
-          break;
-        case -321:
-          h_simParticleType->Fill(7);
-          break;
-        case 2212:
-          h_simParticleType->Fill(8);
-          break;
-        case -2212:
-          h_simParticleType->Fill(9);
-          break;
-        default:
-          h_simParticleType->Fill(10);
-          break;
-      }
-    }
   }
 
   // Loop over muon simHits, fill histograms which does not need associations
