@@ -4,6 +4,7 @@
 #include "DQMServices/Core/interface/DQMEDAnalyzer.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "SimDataFormats/TrackingHit/interface/PSimHitContainer.h"
+#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "DataFormats/RPCDigi/interface/RPCDigiCollection.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 
@@ -23,10 +24,13 @@ private:
   edm::EDGetTokenT<edm::PSimHitContainer> simHitsToken_;
   edm::EDGetTokenT<RPCDigiCollection> rpcDigisToken_;
   edm::EDGetTokenT<reco::GenParticleCollection> genParticlesToken_;
+  edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puInfoToken_;
+
 
   typedef MonitorElement* MEPtr;
 
   MEPtr hNEvents_;
+  MEPtr hNPileup_;
 
   MEPtr hSimHitPid_;
   MEPtr hSimHitTime_;

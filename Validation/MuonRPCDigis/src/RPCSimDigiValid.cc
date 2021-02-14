@@ -13,6 +13,7 @@ RPCSimDigiValid::RPCSimDigiValid(const edm::ParameterSet& pset)
   simHitsToken_ = consumes<edm::PSimHitContainer>(pset.getUntrackedParameter<edm::InputTag>("simHits"));
   rpcDigisToken_ = consumes<RPCDigiCollection>(pset.getUntrackedParameter<edm::InputTag>("rpcDigis"));
   genParticlesToken_ = consumes<reco::GenParticleCollection>(pset.getUntrackedParameter<edm::InputTag>("genParticles"));
+  puInfoToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getUntrackedParameter<edm::InputTag>("pileupInfo"));
 
 }
 
@@ -20,7 +21,7 @@ void RPCSimDigiValid::bookHistograms(DQMStore::IBooker& booker, edm::Run const& 
 {
   booker.setCurrentFolder("RPC/RPCDigisV");
 
-  hNEvents_ = booker.book1D("NEvents", "Number of events;;Events", 10, 1, 11);
+  hNEvents_ = booker.book1D("NEvents", "Number of events;;Events", 6, 1, 7);
   if ( TH1* h = hNEvents_->getTH1() ) {
     h->GetXaxis()->SetBinLabel(1, "All events");
     h->GetXaxis()->SetBinLabel(2, "has GenMuon");
@@ -29,6 +30,8 @@ void RPCSimDigiValid::bookHistograms(DQMStore::IBooker& booker, edm::Run const& 
     h->GetXaxis()->SetBinLabel(5, "has RPC simhit");
     h->GetXaxis()->SetBinLabel(6, "has RPC Digis");
   }
+
+  hNPileup_ = booker.book1D("NPileup", "Number of pileup;Number of pileup;Events", 300, 0, 300);
 
   // Area, nStrips, strip lengths, width...
   // Dead chambers, noisy chambers
@@ -134,7 +137,15 @@ void RPCSimDigiValid::analyze(const edm::Event& event, const edm::EventSetup& ev
   edm::Handle<reco::GenParticleCollection> genParticlesHandle;
   event.getByToken(genParticlesToken_, genParticlesHandle);
 
+  edm::Handle<std::vector<PileupSummaryInfo> > puInfoHandle;
+  event.getByToken(puInfoToken_, puInfoHandle);
+
   hNEvents_->Fill(1);
+
+  if ( puInfoHandle.isValid() and !puInfoHandle->empty() ) {
+    const int nPileup = puInfoHandle->begin()->getPU_NumInteractions();
+    hNPileup_->Fill(nPileup);
+  }
 
   // Check generator level muons in RPC acceptance
   int nGenMuon = 0, nGenMuonEta24 = 0, nGenMuonEta19 = 0;
