@@ -9,3 +9,4 @@
 <use name="DataFormats/MuonDetId"/>
 <use name="DataFormats/RPCRecHit"/>
 <use name="EventFilter/RPCRawToDigi"/>
+<use name="DQM/RPCMonitorClient"/>

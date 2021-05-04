@@ -1,12 +1,10 @@
 #ifndef RPCMonitorDigi_h
 #define RPCMonitorDigi_h
 
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
-
 #include "DQMServices/Core/interface/DQMEDAnalyzer.h"
 #include "DQMServices/Core/interface/DQMStore.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "Geometry/RPCGeometry/interface/RPCGeometry.h"
 #include "DataFormats/Scalers/interface/DcsStatus.h"
@@ -45,10 +43,8 @@ private:
   void performSourceOperation(std::map<RPCDetId, std::vector<RPCRecHit> > &, std::string);
   int stripsInRoll(const RPCDetId &id, const RPCGeometry *rpcGeo) const;
 
-  static const std::array<std::string, 3> regionNames_;
   std::string muonFolder_;
   std::string noiseFolder_;
-  int counter;
 
   float muPtCut_, muEtaCut_;
   bool useRollInfo_;

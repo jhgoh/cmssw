@@ -1,14 +1,6 @@
 #include <DQM/RPCMonitorClient/plugins/RPCNoisyStripTest.h>
 #include "DQM/RPCMonitorDigi/interface/utils.h"
-
-//DQM Services
-//#include "DQMServices/Core/interface/DQMStore.h"
-
-// Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-//#include <FWCore/Framework/interface/ESHandle.h>
-
-//Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 
 RPCNoisyStripTest::RPCNoisyStripTest(const edm::ParameterSet& ps) {
@@ -20,8 +12,6 @@ RPCNoisyStripTest::RPCNoisyStripTest(const edm::ParameterSet& ps) {
   useRollInfo_ = ps.getUntrackedParameter<bool>("UseRollInfo", false);
   testMode_ = ps.getUntrackedParameter<bool>("testMode", false);
 }
-
-RPCNoisyStripTest::~RPCNoisyStripTest() {}
 
 void RPCNoisyStripTest::beginJob(std::string& workingFolder) {
   edm::LogVerbatim("rpcnoisetest") << "[RPCNoisyStripTest]: Begin job ";

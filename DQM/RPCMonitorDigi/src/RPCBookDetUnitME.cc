@@ -1,6 +1,6 @@
 #include <DQM/RPCMonitorDigi/interface/RPCMonitorDigi.h>
 #include <DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h>
-#include <Geometry/RPCGeometry/interface/RPCGeomServ.h>
+#include <DQM/RPCMonitorClient/interface/RPCNameHelper.h>
 #include <Geometry/RPCGeometry/interface/RPCGeometry.h>
 #include <DQM/RPCMonitorDigi/interface/utils.h>
 #include <iomanip>
@@ -22,14 +22,9 @@ void RPCMonitorDigi::bookRollME(DQMStore::IBooker& ibooker,
   }
 
   /// Name components common to current RPCDetId
-  RPCGeomServ RPCname(detId);
-  std::string nameRoll = "";
+  const std::string nameRoll = useRollInfo_ ? RPCNameHelper::rollName(detId) : RPCNameHelper::chamberName(detId);
 
-  if (RPCMonitorDigi::useRollInfo_) {
-    nameRoll = RPCname.name();
-  } else {
-    nameRoll = RPCname.chambername();
-
+  if (!RPCMonitorDigi::useRollInfo_) {
     if (detId.region() != 0 ||                                                     //Endcaps
         (abs(detId.ring()) == 2 && detId.station() == 2 && detId.layer() != 1) ||  //Wheel -/+2 RB2out
         (abs(detId.ring()) != 2 && detId.station() == 2 && detId.layer() == 1)) {
@@ -104,9 +99,7 @@ void RPCMonitorDigi::bookSectorRingME(DQMStore::IBooker& ibooker,
     if (region == 0)
       continue;
 
-    std::string regionName = "Endcap-";
-    if (region == 1)
-      regionName = "Endcap+";
+    const std::string regionName = RPCNameHelper::regionName(region);
 
     for (int disk = 1; disk <= RPCMonitorDigi::numberOfDisks_; disk++) {
       os.str("");
@@ -294,7 +287,7 @@ void RPCMonitorDigi::bookRegionME(DQMStore::IBooker& ibooker,
   std::stringstream title;
   for (int r = 0; r < 3; r++) {  //RPC regions are E-, B, and E+
 
-    std::string regionName = RPCMonitorDigi::regionNames_[r];
+    const std::string regionName = RPCNameHelper::regionNames[r];
     //Cluster size
     name.str("");
     title.str("");

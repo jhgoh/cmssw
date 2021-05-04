@@ -1,16 +1,11 @@
 #include "DQM/RPCMonitorClient/interface/RPCDBHandler.h"
-#include "CondCore/CondDB/interface/Types.h"
 
 RPCDBHandler::RPCDBHandler(const edm::ParameterSet& iConfig)
     : m_name(iConfig.getUntrackedParameter<std::string>("name", "RPCDBHandler")),
-      sinceTime(iConfig.getUntrackedParameter<unsigned>("IOVRun", 0)) {}
-
-RPCDBHandler::~RPCDBHandler() {}
+      sinceTime_(iConfig.getUntrackedParameter<unsigned>("IOVRun", 0)) {}
 
 void RPCDBHandler::getNewObjects() {
-  cond::Time_t myTime = sinceTime;
-
-  //  std::cout << "sinceTime= " << myTime << std::endl;
+  cond::Time_t myTime = sinceTime_;
 
   size_t n_empty_run = 0;
   if (tagInfo().size > 0 && (tagInfo().lastInterval.since + 1) < myTime) {
@@ -22,7 +17,7 @@ void RPCDBHandler::getNewObjects() {
     m_to_transfer.push_back(std::make_pair((RPCDQMObject*)(r->Fake_RPCDQMObject()), tagInfo().lastInterval.since + 1));
   }
 
-  m_to_transfer.push_back(std::make_pair(rpcDQMObject, myTime));
+  m_to_transfer.push_back(std::make_pair(rpcDQMObject_, myTime));
 }
 
-void RPCDBHandler::initObject(RPCDQMObject* fObject) { rpcDQMObject = fObject; }
+void RPCDBHandler::initObject(RPCDQMObject* fObject) { rpcDQMObject_ = fObject; }

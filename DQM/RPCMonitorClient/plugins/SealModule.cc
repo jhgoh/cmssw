@@ -1,7 +1,5 @@
-//#include "FWCore/PluginManager/interface/ModuleDef.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
-//General Client
 #include <DQM/RPCMonitorClient/plugins/RPCDqmClient.h>
 DEFINE_FWK_MODULE(RPCDqmClient);
 
@@ -16,4 +14,3 @@ DEFINE_FWK_MODULE(RPCDcsInfoClient);
 
 #include <DQM/RPCMonitorClient/plugins/RPCEventSummary.h>
 DEFINE_FWK_MODULE(RPCEventSummary);
-

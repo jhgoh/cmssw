@@ -2,9 +2,6 @@
 #define DQM_RPCMonitorDigi_RPCLinkSynchroHistoMaker_H
 
 #include "DQM/RPCMonitorDigi/interface/RPCLinkSynchroStat.h"
-#include <string>
-#include <vector>
-#include <map>
 
 class TH1F;
 class TH2F;

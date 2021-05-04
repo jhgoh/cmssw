@@ -1,14 +1,10 @@
 /*
  *  \author Anna Cimmino
  */
-#include "DQM/RPCMonitorDigi/interface/utils.h"
 #include <DQM/RPCMonitorClient/plugins/RPCMultiplicityTest.h>
+#include "DQM/RPCMonitorDigi/interface/utils.h"
 
-// Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-//DQMServices
-#include "DQMServices/Core/interface/DQMNet.h"
-// Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 
 #include <sstream>
@@ -21,8 +17,6 @@ RPCMultiplicityTest::RPCMultiplicityTest(const edm::ParameterSet& ps) {
   numberOfRings_ = ps.getUntrackedParameter<int>("NumberOfEndcapRings", 2);
   testMode_ = ps.getUntrackedParameter<bool>("testMode", false);
 }
-
-RPCMultiplicityTest::~RPCMultiplicityTest() {}
 
 void RPCMultiplicityTest::beginJob(std::string& workingFolder) {
   edm::LogVerbatim("multiplicity") << "[RPCMultiplicityTest]: Begin job";

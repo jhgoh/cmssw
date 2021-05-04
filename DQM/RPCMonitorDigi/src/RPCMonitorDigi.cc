@@ -1,10 +1,10 @@
 #include "DQM/RPCMonitorDigi/interface/RPCMonitorDigi.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
+#include "DQM/RPCMonitorClient/interface/RPCNameHelper.h"
 
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
 #include "Geometry/CommonDetUnit/interface/GeomDet.h"
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
-#include "Geometry/RPCGeometry/interface/RPCGeometry.h"
 
 #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -13,11 +13,8 @@
 #include <set>
 #include <sstream>
 
-const std::array<std::string, 3> RPCMonitorDigi::regionNames_ = {{"Endcap-", "Barrel", "Endcap+"}};
-
 RPCMonitorDigi::RPCMonitorDigi(const edm::ParameterSet& pset)
-    : counter(0),
-      muonRPCEvents_(nullptr),
+    : muonRPCEvents_(nullptr),
       NumberOfRecHitMuon_(nullptr),
       NumberOfMuon_(nullptr),
       numberOfDisks_(0),
@@ -65,16 +62,14 @@ void RPCMonitorDigi::bookHistograms(DQMStore::IBooker& ibooker, edm::Run const& 
           }
 
           //booking all histograms
-          RPCGeomServ rpcsrv(rpcId);
-          std::string nameID = rpcsrv.name();
+          const std::string nameID = RPCNameHelper::rollName(rpcId);
           if (useMuonDigis_)
             bookRollME(ibooker, rpcId, rpcGeo, muonFolder_, meMuonCollection[nameID]);
           bookRollME(ibooker, rpcId, rpcGeo, noiseFolder_, meNoiseCollection[nameID]);
         }
       } else {
         RPCDetId rpcId = roles[0]->id();  //any roll would do - here I just take the first one
-        RPCGeomServ rpcsrv(rpcId);
-        std::string nameID = rpcsrv.chambername();
+        std::string nameID = RPCNameHelper::chamberName(rpcId);
         if (useMuonDigis_)
           bookRollME(ibooker, rpcId, rpcGeo, muonFolder_, meMuonCollection[nameID]);
         bookRollME(ibooker, rpcId, rpcGeo, noiseFolder_, meNoiseCollection[nameID]);
@@ -114,8 +109,7 @@ void RPCMonitorDigi::bookHistograms(DQMStore::IBooker& ibooker, edm::Run const& 
 }
 
 void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& setup) {
-  counter++;
-  edm::LogInfo("rpcmonitordigi") << "[RPCMonitorDigi]: Beginning analyzing event " << counter;
+  edm::LogInfo("rpcmonitordigi") << "[RPCMonitorDigi]: Beginning analyzing event ";
 
   //Muons
   edm::Handle<reco::CandidateView> muonCands;
@@ -127,7 +121,7 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
   int numRPCRecHit = 0;
 
   if (muonCands.isValid()) {
-    int nStaMuons = muonCands->size();
+    const int nStaMuons = muonCands->size();
 
     for (int i = 0; i < nStaMuons; i++) {
       const reco::Candidate& goodMuon = (*muonCands)[i];
@@ -144,12 +138,12 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
       for (trackingRecHit_iterator it = muTrack.recHitsBegin(); it != muTrack.recHitsEnd(); it++) {
         if (!(*it)->isValid())
           continue;
-        int muSubDetId = (*it)->geographicalId().subdetId();
+        const int muSubDetId = (*it)->geographicalId().subdetId();
         if (muSubDetId == MuonSubdetId::RPC) {
           numRPCRecHit++;
           TrackingRecHit* tkRecHit = (*it)->clone();
           RPCRecHit* rpcRecHit = dynamic_cast<RPCRecHit*>(tkRecHit);
-          int detId = (int)rpcRecHit->rpcId();
+          const int detId = rpcRecHit->rpcId();
           if (rechitMuon.find(detId) == rechitMuon.end() || rechitMuon[detId].empty()) {
             std::vector<RPCRecHit> myVect(1, *rpcRecHit);
             rechitMuon[detId] = myVect;
@@ -179,7 +173,7 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
     this->performSourceOperation(rechitMuon, muonFolder_);
 
   } else {
-    edm::LogError("rpcmonitordigi") << "[RPCMonitorDigi]: Muons - Product not valid for event" << counter;
+    edm::LogError("rpcmonitordigi") << "[RPCMonitorDigi]: Muons - Product not valid for event";
   }
 
   //RecHits
@@ -191,7 +185,7 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
     //    RPC rec hits NOT associated to a muon
     for (auto rpcRecHitIter = rpcHits->begin(); rpcRecHitIter != rpcHits->end(); rpcRecHitIter++) {
       RPCRecHit rpcRecHit = (*rpcRecHitIter);
-      int detId = (int)rpcRecHit.rpcId();
+      const int detId = rpcRecHit.rpcId();
       if (rechitNoise.find(detId) == rechitNoise.end() || rechitNoise[detId].empty()) {
         std::vector<RPCRecHit> myVect(1, rpcRecHit);
         rechitNoise[detId] = myVect;
@@ -200,7 +194,7 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
       }
     }
   } else {
-    edm::LogError("rpcmonitordigi") << "[RPCMonitorDigi]: RPCRecHits - Product not valid for event" << counter;
+    edm::LogError("rpcmonitordigi") << "[RPCMonitorDigi]: RPCRecHits - Product not valid for event";
   }
 
   //Fill counter for all RPC events
@@ -249,28 +243,23 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
 
     //get roll number
     rpcdqm::utils rpcUtils;
-    int nr = rpcUtils.detId2RollNr(detId);
+    const int nr = rpcUtils.detId2RollNr(detId);
 
     RPCGeomServ geoServ(detId);
-    std::string nameRoll = "";
+    const std::string nameRoll = useRollInfo_ ? RPCNameHelper::rollName(detId) : RPCNameHelper::chamberName(detId);
 
-    if (useRollInfo_)
-      nameRoll = geoServ.name();
-    else
-      nameRoll = geoServ.chambername();
-
-    int region = (int)detId.region();
+    const int region = detId.region();
     int wheelOrDiskNumber;
     std::string wheelOrDiskType;
     int ring = 0;
-    int sector = detId.sector();
+    const int sector = detId.sector();
     int layer = 0;
     int totalRolls = 3;
     int roll = detId.roll();
     if (region == 0) {
       wheelOrDiskType = "Wheel";
-      wheelOrDiskNumber = (int)detId.ring();
-      int station = detId.station();
+      wheelOrDiskNumber = detId.ring();
+      const int station = detId.station();
 
       if (station == 1) {
         if (detId.layer() == 1) {
@@ -310,12 +299,12 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
 
     } else {
       wheelOrDiskType = "Disk";
-      wheelOrDiskNumber = region * (int)detId.station();
+      wheelOrDiskNumber = region * detId.station();
       ring = detId.ring();
     }
 
     std::vector<RPCRecHit> recHits = (*detIdIter).second;
-    int numberOfRecHits = recHits.size();
+    const int numberOfRecHits = recHits.size();
     totalNumberOfRecHits[region + 1] += numberOfRecHits;
 
     std::set<int> bxSet;
@@ -328,12 +317,12 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
          recHitIter++) {
       RPCRecHit recHit = (*recHitIter);
 
-      int bx = recHit.BunchX();
+      const int bx = recHit.BunchX();
       bxSet.insert(bx);
-      int clusterSize = (int)recHit.clusterSize();
+      const int clusterSize = recHit.clusterSize();
       numDigi += clusterSize;
-      int firstStrip = recHit.firstClusterStrip();
-      int lastStrip = clusterSize + firstStrip - 1;
+      const int firstStrip = recHit.firstClusterStrip();
+      const int lastStrip = clusterSize + firstStrip - 1;
 
       // ###################### Roll Level  #################################
 
@@ -344,7 +333,7 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
           if (useRollInfo_) {
             meMap[os.str()]->Fill(s);
           } else {
-            int nstrips = meMap[os.str()]->getNbinsX() / totalRolls;
+            const int nstrips = meMap[os.str()]->getNbinsX() / totalRolls;
             meMap[os.str()]->Fill(s + nstrips * (roll - 1));
           }
         }
@@ -430,7 +419,7 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
       // ######################  Global  ##################################
 
       os.str("");
-      os << "ClusterSize_" << RPCMonitorDigi::regionNames_[region + 1];
+      os << "ClusterSize_" << RPCNameHelper::regionName(region);
       if (meRegion[os.str()])
         meRegion[os.str()]->Fill(clusterSize);
 
@@ -457,7 +446,7 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
       meMap[os.str()]->Fill(numberOfRecHits);
 
     os.str("");
-    os << "Multiplicity_" << RPCMonitorDigi::regionNames_[region + 1];
+    os << "Multiplicity_" << RPCNameHelper::regionName(region);
     if (meRegion[os.str()])
       meRegion[os.str()]->Fill(numDigi);
 
@@ -486,7 +475,7 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
 
   for (int i = 0; i < 3; i++) {
     os.str("");
-    os << "NumberOfClusters_" << RPCMonitorDigi::regionNames_[i];
+    os << "NumberOfClusters_" << RPCNameHelper::regionNames[i];
     if (meRegion[os.str()])
       meRegion[os.str()]->Fill(totalNumberOfRecHits[i]);
   }

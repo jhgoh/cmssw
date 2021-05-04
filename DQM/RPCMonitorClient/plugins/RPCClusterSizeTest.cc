@@ -1,10 +1,7 @@
 #include <DQM/RPCMonitorClient/plugins/RPCClusterSizeTest.h>
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
-// Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-
-// //Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 
 RPCClusterSizeTest::RPCClusterSizeTest(const edm::ParameterSet& ps) {
@@ -19,8 +16,6 @@ RPCClusterSizeTest::RPCClusterSizeTest(const edm::ParameterSet& ps) {
 
   resetMEArrays();
 }
-
-RPCClusterSizeTest::~RPCClusterSizeTest() {}
 
 void RPCClusterSizeTest::beginJob(std::string& workingFolder) {
   edm::LogVerbatim("rpceventsummary") << "[RPCClusterSizeTest]: Begin job ";

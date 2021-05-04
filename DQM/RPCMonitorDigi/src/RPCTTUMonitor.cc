@@ -1,8 +1,6 @@
 #include "DQM/RPCMonitorDigi/interface/RPCTTUMonitor.h"
-//FW Core
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-//
 RPCTTUMonitor::RPCTTUMonitor(const edm::ParameterSet& iConfig) {
   ttuFolder = iConfig.getUntrackedParameter<std::string>("TTUFolder", "RPC/TTU");
   outputFile = iConfig.getUntrackedParameter<std::string>("OutPutFile", "");
@@ -14,8 +12,6 @@ RPCTTUMonitor::RPCTTUMonitor(const edm::ParameterSet& iConfig) {
   m_ttBits = iConfig.getParameter<std::vector<unsigned> >("BitNumbers");
   m_maxttBits = m_ttBits.size();
 }
-
-RPCTTUMonitor::~RPCTTUMonitor() {}
 
 // ------------ method called to for each event  ------------
 void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
@@ -42,15 +38,12 @@ void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   //
   //Timing difference between RPC-PAT and DT
 
-  int dGMT(0);
-  dGMT = discriminateGMT(iEvent, iSetup);
-  if (dGMT < 0)
+  if (discriminateGMT(iEvent, iSetup) < 0)
     return;
 
   std::map<int, bool> ttuDec;
-  std::map<int, bool>::iterator decItr;
 
-  int bxX = iEvent.bunchCrossing();  // ... 1 to 3564
+  const int bxX = iEvent.bunchCrossing();  // ... 1 to 3564
 
   for (int k = 0; k < m_maxttBits; ++k) {
     for (int iebx = 0; iebx <= 2; iebx++) {
@@ -61,11 +54,11 @@ void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
     //. RPC
     if (m_rpcTrigger) {
       int ndec(0);
-      int bx1 = (bxX - m_GMTcandidatesBx[0]);
-      for (decItr = ttuDec.begin(); decItr != ttuDec.end(); ++decItr) {
+      const int bx1 = (bxX - m_GMTcandidatesBx[0]);
+      for (auto decItr = ttuDec.begin(); decItr != ttuDec.end(); ++decItr) {
         if ((*decItr).second) {
-          int bx2 = (*decItr).first;
-          float bxdiffPacTT = 1.0 * (bx1 - bx2);
+          const int bx2 = (*decItr).first;
+          const float bxdiffPacTT = 1.0 * (bx1 - bx2);
           m_bxDistDiffPac[k]->Fill(bxdiffPacTT);
           ++ndec;
         }
@@ -75,11 +68,11 @@ void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
     //.. DT
     if (m_dtTrigger) {
       int ndec(0);
-      int bx1 = (bxX - m_DTcandidatesBx[0]);
-      for (decItr = ttuDec.begin(); decItr != ttuDec.end(); ++decItr) {
+      const int bx1 = (bxX - m_DTcandidatesBx[0]);
+      for (auto decItr = ttuDec.begin(); decItr != ttuDec.end(); ++decItr) {
         if ((*decItr).second) {
-          int bx2 = (*decItr).first;
-          float bxdiffDtTT = 1.0 * (bx1 - bx2);
+          const int bx2 = (*decItr).first;
+          const float bxdiffDtTT = 1.0 * (bx1 - bx2);
           m_bxDistDiffDt[k]->Fill(bxdiffDtTT);
           ++ndec;
         }
@@ -99,7 +92,6 @@ void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
   std::vector<L1GtTechnicalTrigger> ttVec = emuTTRecord->gtTechnicalTrigger();
 
-  std::vector<unsigned>::iterator bitsItr;
   int k = 0;
   //int m_BxWindow = 0;
   bool hasDataTrigger = false;
@@ -108,7 +100,7 @@ void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   if (ttVec.empty())
     return;
 
-  for (bitsItr = m_ttBits.begin(); bitsItr != m_ttBits.end(); ++bitsItr) {
+  for (auto bitsItr = m_ttBits.begin(); bitsItr != m_ttBits.end(); ++bitsItr) {
     hasDataTrigger = gtTTWord.at((*bitsItr));
     m_ttBitsDecisionData->Fill((*bitsItr), (int)hasDataTrigger);
 
@@ -160,23 +152,21 @@ int RPCTTUMonitor::discriminateGMT(const edm::Event& iEvent, const edm::EventSet
     int nrpcB = 0;
     int ndtB = 0;
 
-    std::vector<L1MuRegionalCand> BrlRpcCands = RRItr->getBrlRPCCands();
-    std::vector<L1MuRegionalCand> BrlDtCands = RRItr->getDTBXCands();
+    const std::vector<L1MuRegionalCand> BrlRpcCands = RRItr->getBrlRPCCands();
+    const std::vector<L1MuRegionalCand> BrlDtCands = RRItr->getDTBXCands();
 
-    std::vector<L1MuRegionalCand>::const_iterator RCItr;
-
-    for (RCItr = BrlRpcCands.begin(); RCItr != BrlRpcCands.end(); ++RCItr) {
+    for (auto RCItr = BrlRpcCands.begin(); RCItr != BrlRpcCands.end(); ++RCItr) {
       if (!(*RCItr).empty()) {
         m_GMTcandidatesBx.push_back(BxInEventNew);
 
-        nrpcB++;
+        ++nrpcB;
       }
     }
 
-    for (RCItr = BrlDtCands.begin(); RCItr != BrlDtCands.end(); ++RCItr) {
+    for (auto RCItr = BrlDtCands.begin(); RCItr != BrlDtCands.end(); ++RCItr) {
       if (!(*RCItr).empty()) {
         m_DTcandidatesBx.push_back(BxInEventNew);
-        ndtB++;
+        ++ndtB;
       }
     }
 

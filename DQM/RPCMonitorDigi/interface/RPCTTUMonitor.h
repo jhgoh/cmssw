@@ -1,14 +1,12 @@
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
-#include "FWCore/Framework/interface/ESHandle.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
+#ifndef RPCTTUMonitor_H
+#define RPCTTUMonitor_H
+#include "DQMServices/Core/interface/DQMEDAnalyzer.h"
+#include "DQMServices/Core/interface/DQMStore.h"
 
+#include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 //... L1Trigger
-
 #include <DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerRecord.h>
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetup.h"
@@ -22,24 +20,6 @@
 #include <DataFormats/L1GlobalTrigger/interface/L1GtTechnicalTrigger.h>
 #include <DataFormats/L1GlobalTrigger/interface/L1GtTechnicalTriggerRecord.h>
 
-//... For Track Study
-#include "DataFormats/TrackReco/interface/TrackFwd.h"
-#include "DataFormats/TrackReco/interface/Track.h"
-#include "DataFormats/TrackingRecHit/interface/TrackingRecHit.h"
-
-#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
-#include "Geometry/CommonDetUnit/interface/GeomDet.h"
-#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
-
-#include "DataFormats/RecoCandidate/interface/RecoCandidate.h"
-#include "DataFormats/Math/interface/LorentzVector.h"
-#include "DataFormats/TrackReco/interface/Track.h"
-#include "DataFormats/MuonReco/interface/Muon.h"
-#include "DataFormats/MuonReco/interface/MuonFwd.h"
-#include "DataFormats/MuonReco/interface/MuonSelectors.h"
-
-#include "DQMServices/Core/interface/DQMEDAnalyzer.h"
-#include "DQMServices/Core/interface/DQMStore.h"
 //
 // class declaration
 //
@@ -47,7 +27,7 @@
 class RPCTTUMonitor : public DQMEDAnalyzer {
 public:
   explicit RPCTTUMonitor(const edm::ParameterSet &);
-  ~RPCTTUMonitor() override;
+  ~RPCTTUMonitor() override = default;
 
   int discriminateGMT(const edm::Event &iEvent, const edm::EventSetup &iSetup);
 
@@ -83,3 +63,4 @@ private:
   edm::EDGetTokenT<L1MuGMTReadoutCollection> m_gmtReadoutLabel;
   edm::EDGetTokenT<L1GtTechnicalTriggerRecord> m_rpcTechTrigEmu;
 };
+#endif

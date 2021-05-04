@@ -22,8 +22,6 @@ RPCMonitorLinkSynchro::RPCMonitorLinkSynchro(const edm::ParameterSet& cfg)
       consumes<RPCRawSynchro::ProdItem>(cfg.getParameter<edm::InputTag>("rpcRawSynchroProdItemTag"));
 }
 
-RPCMonitorLinkSynchro::~RPCMonitorLinkSynchro() {}
-
 void RPCMonitorLinkSynchro::endLuminosityBlock(const edm::LuminosityBlock& ls, const edm::EventSetup& es) {
   RPCLinkSynchroHistoMaker hm(theSynchroStat);
   hm.fill(me_delaySummary->getTH1F(), me_delaySpread->getTH2F(), me_topOccup->getTH2F(), me_topSpread->getTH2F());

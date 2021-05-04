@@ -1,14 +1,12 @@
 /*  \author Anna Cimmino*/
+#include <DQM/RPCMonitorClient/plugins/RPCEventSummary.h>
 #include <sstream>
 
-#include <DQM/RPCMonitorClient/plugins/RPCEventSummary.h>
 //CondFormats
 #include "CondFormats/RunInfo/interface/RunInfo.h"
 #include "CondFormats/DataRecord/interface/RunSummaryRcd.h"
 // Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-//#include "FWCore/Framework/interface/LuminosityBlock.h"
-//#include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 

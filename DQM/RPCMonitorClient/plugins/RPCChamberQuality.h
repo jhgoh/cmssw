@@ -1,7 +1,6 @@
 #ifndef RPCChamberQuality_H
 #define RPCChamberQuality_H
 
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/DQMEDHarvester.h"
 

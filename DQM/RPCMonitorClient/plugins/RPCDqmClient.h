@@ -1,8 +1,8 @@
 #ifndef RPCDqmClient_H
 #define RPCDqmClient_H
 
-#include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/DQMEDHarvester.h"
+#include "DQMServices/Core/interface/DQMStore.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DQM/RPCMonitorClient/interface/RPCClient.h"
 
@@ -15,7 +15,7 @@ public:
   RPCDqmClient(const edm::ParameterSet &ps);
 
   /// Destructor
-  ~RPCDqmClient() override;
+  ~RPCDqmClient() override = default;
 
 protected:
   void beginJob() override;

@@ -1,11 +1,9 @@
-#include <sstream>
 #include <DQM/RPCMonitorClient/plugins/RPCChamberQuality.h>
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
-// Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-//DataFormats
 #include <DataFormats/MuonDetId/interface/RPCDetId.h>
+#include <sstream>
 
 const std::string RPCChamberQuality::xLabels_[7] = {
     "Good", "OFF", "Nois.St", "Nois.Ch", "Part.Dead", "Dead", "Bad.Shape"};

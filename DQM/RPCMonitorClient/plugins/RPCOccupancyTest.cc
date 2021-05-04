@@ -1,7 +1,6 @@
 /*  \author Anna Cimmino*/
-//#include <cmath>
-#include <sstream>
 #include <DQM/RPCMonitorClient/plugins/RPCOccupancyTest.h>
+#include <sstream>
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
 // Framework
@@ -23,8 +22,6 @@ RPCOccupancyTest::RPCOccupancyTest(const edm::ParameterSet& ps) {
 
   prefixDir_ = subsystemFolder + "/" + recHitTypeFolder;
 }
-
-RPCOccupancyTest::~RPCOccupancyTest() {}
 
 void RPCOccupancyTest::beginJob(std::string& workingFolder) {
   edm::LogVerbatim("rpceventsummary") << "[RPCOccupancyTest]: Begin job ";

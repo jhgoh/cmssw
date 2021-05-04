@@ -2,6 +2,7 @@
 // Original Author:  Anna Cimmino
 
 #include "DQM/RPCMonitorClient/plugins/RPCDqmClient.h"
+#include "DQM/RPCMonitorClient/interface/RPCNameHelper.h"
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 //include client headers
@@ -12,10 +13,8 @@
 #include "DQM/RPCMonitorClient/plugins/RPCNoisyStripTest.h"
 //Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeometry.h"
-#include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
 //Framework
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <FWCore/Framework/interface/ESHandle.h>
 
@@ -50,8 +49,6 @@ RPCDqmClient::RPCDqmClient(const edm::ParameterSet& parameters_) {
   //clear counters
   lumiCounter_ = 0;
 }
-
-RPCDqmClient::~RPCDqmClient() {}
 
 void RPCDqmClient::beginJob() {
   if (!enableDQMClients_) {
@@ -151,8 +148,7 @@ void RPCDqmClient::getMonitorElements(DQMStore::IGetter& igetter) {
   //loop on all geometry and get all histos
   for (auto& detId : myDetIds_) {
     //Get name
-    RPCGeomServ RPCname(detId);
-    rollName = useRollInfo_ ? RPCname.name() : RPCname.chambername();
+    const std::string rollName = useRollInfo_ ? RPCNameHelper::rollName(detId) : RPCNameHelper::chamberName(detId);
 
     //loop on clients
     for (unsigned int cl = 0, nCL = clientModules_.size(); cl < nCL; ++cl) {

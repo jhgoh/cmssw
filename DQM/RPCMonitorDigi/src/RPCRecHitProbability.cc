@@ -1,20 +1,10 @@
+#include "DQM/RPCMonitorDigi/interface/RPCRecHitProbability.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+#include "DataFormats/Common/interface/Handle.h"
 #include <sstream>
 #include <TMath.h>
-#include "DQM/RPCMonitorDigi/interface/RPCRecHitProbability.h"
-//Geometry
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
-#include "Geometry/CommonDetUnit/interface/GeomDet.h"
-//Tracking Tools
-#include "TrackingTools/TransientTrack/interface/TransientTrack.h"
-//FW Core
-#include "FWCore/MessageLogger/interface/MessageLogger.h"
-//Reco Muon
-#include "RecoMuon/TransientTrackingRecHit/interface/MuonTransientTrackingRecHit.h"
 
-RPCRecHitProbability::RPCRecHitProbability(const edm::ParameterSet& pset) : counter(0) {
-  saveRootFile = pset.getUntrackedParameter<bool>("SaveRootFile", false);
-  RootFileName = pset.getUntrackedParameter<std::string>("RootFileName", "RPCRecHitProbabilityDQM.root");
-
+RPCRecHitProbability::RPCRecHitProbability(const edm::ParameterSet& pset) : counter_(0) {
   muonLabel_ = consumes<reco::CandidateView>(pset.getParameter<edm::InputTag>("MuonLabel"));
   muPtCut_ = pset.getUntrackedParameter<double>("MuonPtCut", 3.0);
   muEtaCut_ = pset.getUntrackedParameter<double>("MuonEtaCut", 1.9);
@@ -25,17 +15,13 @@ RPCRecHitProbability::RPCRecHitProbability(const edm::ParameterSet& pset) : coun
   muonFolder_ = pset.getUntrackedParameter<std::string>("MuonFolder", "Muon");
 }
 
-RPCRecHitProbability::~RPCRecHitProbability() {}
-
-void RPCRecHitProbability::bookHistograms(DQMStore::IBooker& ibooker,
-                                          edm::Run const& r,
-                                          edm::EventSetup const& iSetup) {
-  edm::LogInfo("rpcrechitprobability") << "[RPCRecHitProbability]: Begin Run ";
+void RPCRecHitProbability::bookHistograms(DQMStore::IBooker& ibooker, edm::Run const&, edm::EventSetup const&) {
+  edm::LogInfo("rpcrechitp/obability") << "[RPCRecHitProbability]: Begin Run ";
 
   std::string currentFolder = subsystemFolder_ + "/" + muonFolder_ + "/" + globalFolder_;
   ibooker.setCurrentFolder(currentFolder);
 
-  int ptBins = 100 - (int)muPtCut_;
+  const int ptBins = 100 - (int)muPtCut_;
 
   //General part
   NumberOfMuonEta_ = ibooker.book1D("NumberOfMuonEta", "Muons vs Eta", 20 * muEtaCut_, -muEtaCut_, muEtaCut_);
@@ -110,8 +96,8 @@ void RPCRecHitProbability::analyze(const edm::Event& event, const edm::EventSetu
     return;  //if RPC not ON there's no need to continue
   }
 
-  counter++;
-  edm::LogInfo("rpcrechitprobability") << "[RPCRecHitProbability]: Beginning analyzing event " << counter;
+  ++counter_;
+  edm::LogInfo("rpcrechitprobability") << "[RPCRecHitProbability]: Beginning analyzing event " << counter_;
 
   //Muons
   edm::Handle<reco::CandidateView> muonCands;
@@ -183,7 +169,7 @@ void RPCRecHitProbability::analyze(const edm::Event& event, const edm::EventSetu
       }
     }
   } else {
-    edm::LogError("rpcrechitprobability") << "[RPCRecHitProbability]: Muons - Product not valid for event" << counter;
+    edm::LogError("rpcrechitprobability") << "[RPCRecHitProbability]: Muons - Product not valid for event" << counter_;
   }
 }
 

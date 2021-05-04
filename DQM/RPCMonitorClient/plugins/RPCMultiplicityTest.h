@@ -2,7 +2,6 @@
 #define RPCMultiplicityTest_H
 
 #include "DQM/RPCMonitorClient/interface/RPCClient.h"
-#include "DQMServices/Core/interface/DQMStore.h"
 
 class RPCMultiplicityTest : public RPCClient {
 public:
@@ -10,7 +9,7 @@ public:
   RPCMultiplicityTest(const edm::ParameterSet &ps);
 
   /// Destructor
-  ~RPCMultiplicityTest() override;
+  ~RPCMultiplicityTest() override = default;
 
   void clientOperation() override;
   void getMonitorElements(std::vector<MonitorElement *> &, std::vector<RPCDetId> &, std::string &) override;
