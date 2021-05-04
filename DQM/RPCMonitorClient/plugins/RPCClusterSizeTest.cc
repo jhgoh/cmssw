@@ -1,4 +1,4 @@
-#include <DQM/RPCMonitorClient/interface/RPCClusterSizeTest.h>
+#include <DQM/RPCMonitorClient/plugins/RPCClusterSizeTest.h>
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
 // Framework

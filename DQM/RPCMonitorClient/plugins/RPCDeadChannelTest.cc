@@ -1,6 +1,6 @@
 /* *  \author Anna Cimmino*/
 #include "DQM/RPCMonitorDigi/interface/utils.h"
-#include <DQM/RPCMonitorClient/interface/RPCDeadChannelTest.h>
+#include <DQM/RPCMonitorClient/plugins/RPCDeadChannelTest.h>
 // Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 // Geometry

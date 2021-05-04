@@ -2,7 +2,7 @@
  *  \author Anna Cimmino
  */
 #include "DQM/RPCMonitorDigi/interface/utils.h"
-#include <DQM/RPCMonitorClient/interface/RPCMultiplicityTest.h>
+#include <DQM/RPCMonitorClient/plugins/RPCMultiplicityTest.h>
 
 // Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"

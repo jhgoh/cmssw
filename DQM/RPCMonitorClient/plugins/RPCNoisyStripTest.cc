@@ -1,4 +1,4 @@
-#include <DQM/RPCMonitorClient/interface/RPCNoisyStripTest.h>
+#include <DQM/RPCMonitorClient/plugins/RPCNoisyStripTest.h>
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
 //DQM Services

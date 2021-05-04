@@ -1,5 +1,5 @@
-#include "CondCore/CondDB/interface/Types.h"
 #include "DQM/RPCMonitorClient/interface/RPCDBHandler.h"
+#include "CondCore/CondDB/interface/Types.h"
 
 RPCDBHandler::RPCDBHandler(const edm::ParameterSet& iConfig)
     : m_name(iConfig.getUntrackedParameter<std::string>("name", "RPCDBHandler")),

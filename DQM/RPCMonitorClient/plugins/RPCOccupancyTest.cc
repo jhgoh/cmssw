@@ -1,7 +1,7 @@
 /*  \author Anna Cimmino*/
 //#include <cmath>
 #include <sstream>
-#include <DQM/RPCMonitorClient/interface/RPCOccupancyTest.h>
+#include <DQM/RPCMonitorClient/plugins/RPCOccupancyTest.h>
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
 // Framework

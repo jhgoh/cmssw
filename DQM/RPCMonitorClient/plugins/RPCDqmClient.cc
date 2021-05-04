@@ -1,15 +1,15 @@
 // Package:    RPCDqmClient
 // Original Author:  Anna Cimmino
 
-#include "DQM/RPCMonitorClient/interface/RPCDqmClient.h"
+#include "DQM/RPCMonitorClient/plugins/RPCDqmClient.h"
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 //include client headers
-#include "DQM/RPCMonitorClient/interface/RPCDeadChannelTest.h"
-#include "DQM/RPCMonitorClient/interface/RPCMultiplicityTest.h"
-#include "DQM/RPCMonitorClient/interface/RPCClusterSizeTest.h"
-#include "DQM/RPCMonitorClient/interface/RPCOccupancyTest.h"
-#include "DQM/RPCMonitorClient/interface/RPCNoisyStripTest.h"
+#include "DQM/RPCMonitorClient/plugins/RPCDeadChannelTest.h"
+#include "DQM/RPCMonitorClient/plugins/RPCMultiplicityTest.h"
+#include "DQM/RPCMonitorClient/plugins/RPCClusterSizeTest.h"
+#include "DQM/RPCMonitorClient/plugins/RPCOccupancyTest.h"
+#include "DQM/RPCMonitorClient/plugins/RPCNoisyStripTest.h"
 //Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeometry.h"
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
