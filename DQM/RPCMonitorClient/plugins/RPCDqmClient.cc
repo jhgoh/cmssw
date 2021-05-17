@@ -143,23 +143,20 @@ void RPCDqmClient::getMonitorElements(DQMStore::IGetter& igetter) {
   std::vector<RPCDetId> myDetIds;
 
   //dbe_->setCurrentFolder(prefixDir_);
-  RPCBookFolderStructure* folderStr = new RPCBookFolderStructure();
   MonitorElement* myMe = nullptr;
 
   //loop on all geometry and get all histos
   for (auto& detId : myDetIds_) {
     //Get name
     const std::string rollName = RPCNameHelper::name(detId, useRollInfo_);
+    const std::string folder = RPCBookFolderStructure::folderStructure(detId);
 
     //loop on clients
     for (unsigned int cl = 0, nCL = clientModules_.size(); cl < nCL; ++cl) {
-      myMe =
-          igetter.get(prefixDir_ + "/" + folderStr->folderStructure(detId) + "/" + clientHisto_[cl] + "_" + rollName);
-      if (!myMe) {
+      myMe = igetter.get(prefixDir_ + "/" + folder + "/" + clientHisto_[cl] + "_" + rollName);
+      if (!myMe)
         continue;
-      }
 
-      //	   dbe_->tag(myMe, clientTag_[cl]);
       myMeVect.push_back(myMe);
       myDetIds.push_back(detId);
 
@@ -171,7 +168,6 @@ void RPCDqmClient::getMonitorElements(DQMStore::IGetter& igetter) {
     clientModules_[cl]->getMonitorElements(myMeVect, myDetIds, clientHisto_[cl]);
   }
 
-  delete folderStr;
 }
 
 void RPCDqmClient::getRPCdetId(const edm::EventSetup& eventSetup) {

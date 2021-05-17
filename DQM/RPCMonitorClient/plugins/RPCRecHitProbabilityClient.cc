@@ -3,7 +3,7 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include <string>
-#include <sstream>
+#include <fmt/format.h>
 
 RPCRecHitProbabilityClient::RPCRecHitProbabilityClient(const edm::ParameterSet &iConfig) {
   edm::LogVerbatim("rpcdqmclient") << "[RPCRecHitProbabilityClient]: Constructor";
@@ -50,92 +50,40 @@ void RPCRecHitProbabilityClient::dqmEndJob(DQMStore::IBooker &ibooker, DQMStore:
   TH1F *NumberOfMuonPhiEMTH1F = NumberOfMuonPhi_EM->getTH1F();
 
   MonitorElement *recHit;
-  TH1F *recHitTH1F;
-  std::stringstream name;
-
   for (int i = 1; i <= 6; i++) {
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonEta";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonEta", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonEtaTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonEtaTH1F);
     }
 
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonPtB";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtB", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonPtBTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonPtBTH1F);
     }
 
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonPhiB";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiB", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonPhiBTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonPhiBTH1F);
     }
 
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonPtEP";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtEP", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonPtEPTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonPtEPTH1F);
     }
 
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonPhiEP";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiEP", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonPhiEPTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonPhiEPTH1F);
     }
 
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonPtEM";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtEM", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonPtEMTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonPtEMTH1F);
     }
 
-    recHit = nullptr;
-    recHitTH1F = nullptr;
-
-    name.str("");
-    name << globalFolder_ << "/" << i << "RecHitMuonPhiEM";
-    recHit = igetter.get(name.str());
-
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiEM", globalFolder_, i));
     if (recHit) {
-      recHitTH1F = recHit->getTH1F();
-      recHitTH1F->Divide(NumberOfMuonPhiEMTH1F);
+      recHit->getTH1F()->Divide(NumberOfMuonPhiEMTH1F);
     }
   }
 }

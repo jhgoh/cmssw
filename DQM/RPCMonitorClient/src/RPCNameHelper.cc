@@ -41,7 +41,7 @@ std::string RPCNameHelper::chamberName(const RPCDetId& detId)
     const int nsub = (ring == 1 and detId.station() > 1) ? 3 : 6;
     const int segment = detId.subsector() + (detId.sector()-1)*nsub;
 
-    return fmt::format("RE%+2d_R%d_CH%02d", disk, ring, segment);
+    return fmt::format("RE{:+2d}_R{}_CH{:02d}", disk, ring, segment);
   }
   else {
     // Barrel
@@ -67,7 +67,7 @@ std::string RPCNameHelper::chamberName(const RPCDetId& detId)
       }
     }
 
-    return fmt::format("W%+2d_RB%d%s_S%02d", wheel, station, roll.c_str(), subsector);
+    return fmt::format("W{:+2d}_RB{:d}{}_S{:02d}", wheel, station, roll, subsector);
   }
 
   return "";

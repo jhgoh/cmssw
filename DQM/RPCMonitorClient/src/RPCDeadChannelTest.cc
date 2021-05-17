@@ -6,7 +6,7 @@
 // Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 
-#include <sstream>
+#include <fmt/format.h>
 
 RPCDeadChannelTest::RPCDeadChannelTest(const edm::ParameterSet& ps) {
   edm::LogVerbatim("rpcdeadchanneltest") << "[RPCDeadChannelTest]: Constructor";
@@ -105,8 +105,6 @@ void RPCDeadChannelTest::clientOperation() {
 void RPCDeadChannelTest::myBooker(DQMStore::IBooker& ibooker) {
   ibooker.setCurrentFolder(globalFolder_);
 
-  std::stringstream histoName;
-
   rpcdqm::utils rpcUtils;
 
   int limit = numberOfDisks_;
@@ -115,9 +113,8 @@ void RPCDeadChannelTest::myBooker(DQMStore::IBooker& ibooker) {
 
   for (int i = -1 * limit; i <= limit; i++) {  //loop on wheels and disks
     if (i > -3 && i < 3) {                     //wheels
-      histoName.str("");
-      histoName << "DeadChannelFraction_Roll_vs_Sector_Wheel" << i;
-      DEADWheel[i + 2] = ibooker.book2D(histoName.str().c_str(), histoName.str().c_str(), 12, 0.5, 12.5, 21, 0.5, 21.5);
+      const std::string histoNameBarrel = fmt::format("DeadChannelFraction_Roll_vs_Sector_Wheel{}", i);
+      DEADWheel[i + 2] = ibooker.book2D(histoNameBarrel, histoNameBarrel, 12, 0.5, 12.5, 21, 0.5, 21.5);
 
       for (int x = 1; x <= 12; x++) {
         for (int y = 1; y <= 21; y++) {
@@ -135,19 +132,11 @@ void RPCDeadChannelTest::myBooker(DQMStore::IBooker& ibooker) {
 
     int offset = numberOfDisks_;
     if (i > 0) {
-      offset--;
+      --offset;
     }  //used to skip case equale to zero
 
-    histoName.str("");
-    histoName << "DeadChannelFraction_Ring_vs_Segment_Disk" << i;
-    DEADDisk[i + offset] = ibooker.book2D(histoName.str().c_str(),
-                                          histoName.str().c_str(),
-                                          36,
-                                          0.5,
-                                          36.5,
-                                          3 * numberOfRings_,
-                                          0.5,
-                                          3 * numberOfRings_ + 0.5);
+    const std::string histoNameEndcap = fmt::format("DeadChannelFraction_Ring_vs_Segment_Disk{}", i);
+    DEADDisk[i + offset] = ibooker.book2D(histoNameEndcap, histoNameEndcap, 36, 0.5, 36.5, 3 * numberOfRings_, 0.5, 3 * numberOfRings_ + 0.5);
 
     rpcUtils.labelXAxisSegment(DEADDisk[i + offset]);
     rpcUtils.labelYAxisRing(DEADDisk[i + offset], numberOfRings_, useRollInfo_);
