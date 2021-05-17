@@ -32,7 +32,7 @@ RPCMonitorDigi::RPCMonitorDigi(const edm::ParameterSet& pset)
   globalFolder_ = pset.getUntrackedParameter<std::string>("GlobalFolder", "SummaryHistograms");
 
   //Parametersets for tokens
-  muonLabel_ = consumes<reco::CandidateView>(pset.getParameter<edm::InputTag>("MuonLabel"));
+  muonLabel_ = consumes<reco::MuonCollection>(pset.getParameter<edm::InputTag>("MuonLabel"));
   rpcRecHitLabel_ = consumes<RPCRecHitCollection>(pset.getParameter<edm::InputTag>("RecHitLabel"));
   scalersRawToDigiLabel_ = consumes<DcsStatusCollection>(pset.getParameter<edm::InputTag>("ScalersRawToDigiLabel"));
 
@@ -114,11 +114,11 @@ void RPCMonitorDigi::bookHistograms(DQMStore::IBooker& ibooker, edm::Run const& 
 }
 
 void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& setup) {
-  counter++;
+  ++counter;
   edm::LogInfo("rpcmonitordigi") << "[RPCMonitorDigi]: Beginning analyzing event " << counter;
 
   //Muons
-  edm::Handle<reco::CandidateView> muonCands;
+  edm::Handle<reco::MuonCollection> muonCands;
   event.getByToken(muonLabel_, muonCands);
 
   std::map<RPCDetId, std::vector<RPCRecHit> > rechitMuon;
@@ -127,26 +127,21 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
   int numRPCRecHit = 0;
 
   if (muonCands.isValid()) {
-    int nStaMuons = muonCands->size();
-
-    for (int i = 0; i < nStaMuons; i++) {
-      const reco::Candidate& goodMuon = (*muonCands)[i];
-      const reco::Muon* muCand = dynamic_cast<const reco::Muon*>(&goodMuon);
-
-      if (!muCand->isGlobalMuon())
+    for ( auto& muCand : *muonCands ) {
+      if (!muCand.isGlobalMuon())
         continue;
-      if (muCand->pt() < muPtCut_ || fabs(muCand->eta()) > muEtaCut_)
+      if (muCand.pt() < muPtCut_ || std::abs(muCand.eta()) > muEtaCut_)
         continue;
-      numMuons++;
-      reco::Track muTrack = (*(muCand->outerTrack()));
+      ++numMuons;
+      const reco::TrackRef muTrack = muCand.outerTrack();
       std::vector<TrackingRecHitRef> rpcTrackRecHits;
       //loop on mu rechits
-      for (trackingRecHit_iterator it = muTrack.recHitsBegin(); it != muTrack.recHitsEnd(); it++) {
+      for (trackingRecHit_iterator it = muTrack->recHitsBegin(); it != muTrack->recHitsEnd(); it++) {
         if (!(*it)->isValid())
           continue;
         int muSubDetId = (*it)->geographicalId().subdetId();
         if (muSubDetId == MuonSubdetId::RPC) {
-          numRPCRecHit++;
+          ++numRPCRecHit;
           TrackingRecHit* tkRecHit = (*it)->clone();
           RPCRecHit* rpcRecHit = dynamic_cast<RPCRecHit*>(tkRecHit);
           int detId = (int)rpcRecHit->rpcId();
@@ -189,8 +184,7 @@ void RPCMonitorDigi::analyze(const edm::Event& event, const edm::EventSetup& set
 
   if (rpcHits.isValid()) {
     //    RPC rec hits NOT associated to a muon
-    for (auto rpcRecHitIter = rpcHits->begin(); rpcRecHitIter != rpcHits->end(); rpcRecHitIter++) {
-      RPCRecHit rpcRecHit = (*rpcRecHitIter);
+    for ( const auto& rpcRecHit : *rpcHits ) {
       int detId = (int)rpcRecHit.rpcId();
       if (rechitNoise.find(detId) == rechitNoise.end() || rechitNoise[detId].empty()) {
         std::vector<RPCRecHit> myVect(1, rpcRecHit);
@@ -324,10 +318,7 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
     std::map<std::string, MonitorElement*> meMap = meRollCollection[nameRoll];
 
     //Loop on recHits
-    for (std::vector<RPCRecHit>::const_iterator recHitIter = recHits.begin(); recHitIter != recHits.end();
-         recHitIter++) {
-      RPCRecHit recHit = (*recHitIter);
-
+    for ( const auto& recHit : recHits ) {
       int bx = recHit.BunchX();
       bxSet.insert(bx);
       int clusterSize = (int)recHit.clusterSize();

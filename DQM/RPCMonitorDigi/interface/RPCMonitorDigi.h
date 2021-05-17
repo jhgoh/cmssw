@@ -12,6 +12,7 @@
 #include "DataFormats/MuonDetId/interface/RPCDetId.h"
 #include "DataFormats/RPCRecHit/interface/RPCRecHitCollection.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
 
 #include <string>
 #include <array>
@@ -72,7 +73,7 @@ private:
   std::string globalFolder_;
   std::string subsystemFolder_;
 
-  edm::EDGetTokenT<reco::CandidateView> muonLabel_;
+  edm::EDGetTokenT<reco::MuonCollection> muonLabel_;
   edm::EDGetTokenT<RPCRecHitCollection> rpcRecHitLabel_;
   edm::EDGetTokenT<DcsStatusCollection> scalersRawToDigiLabel_;
 };
