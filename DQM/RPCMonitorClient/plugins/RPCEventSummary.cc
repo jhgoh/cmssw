@@ -9,7 +9,7 @@
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 
-#include <sstream>
+#include <fmt/format.h>
 
 RPCEventSummary::RPCEventSummary(const edm::ParameterSet& ps) {
   edm::LogVerbatim("rpceventsummary") << "[RPCEventSummary]: Constructor";
@@ -93,25 +93,20 @@ void RPCEventSummary::dqmEndLuminosityBlock(DQMStore::IBooker& ibooker,
     me = ibooker.book2D("reportSummaryMap", "RPC Report Summary Map", 15, -7.5, 7.5, 12, 0.5, 12.5);
 
     //customize the 2d histo
-    std::stringstream BinLabel;
     for (int i = 1; i <= 15; i++) {
-      BinLabel.str("");
       if (i < 13) {
-        BinLabel << "Sec" << i;
-        me->setBinLabel(i, BinLabel.str(), 2);
+        me->setBinLabel(i, fmt::format("Sec{}", i), 2);
       }
 
-      BinLabel.str("");
+      std::string binLabel;
       if (i < 5)
-        BinLabel << "Disk" << i - 5;
+        binLabel = fmt::format("Disk{}", i-5);
       else if (i > 11)
-        BinLabel << "Disk" << i - 11;
-      else if (i == 11 || i == 5)
-        BinLabel.str("");
-      else
-        BinLabel << "Wheel" << i - 8;
+        binLabel = fmt::format("Disk{}", i-11);
+      else if (i != 11 and i != 5)
+        binLabel = fmt::format("Wheel{}", i-8);
 
-      me->setBinLabel(i, BinLabel.str(), 1);
+      me->setBinLabel(i, binLabel, 1);
     }
 
     //fill the histo with "1" --- just for the moment
@@ -134,24 +129,18 @@ void RPCEventSummary::dqmEndLuminosityBlock(DQMStore::IBooker& ibooker,
     // which describe the behavior of the respective subsystem sub-components.
     ibooker.setCurrentFolder(eventInfoPath_ + "/reportSummaryContents");
 
-    std::stringstream segName;
     std::vector<std::string> segmentNames;
     for (int i = -2; i <= 2; i++) {
-      segName.str("");
-      segName << "RPC_Wheel" << i;
-      segmentNames.push_back(segName.str());
+      segmentNames.push_back(fmt::format("RPC_Wheel{}", i));
     }
 
     for (int i = -numberDisk_; i <= numberDisk_; i++) {
       if (i == 0)
         continue;
-      segName.str("");
-      segName << "RPC_Disk" << i;
-      segmentNames.push_back(segName.str());
+      segmentNames.push_back(fmt::format("RPC_Disk{}", i));
     }
 
     for (unsigned int i = 0; i < segmentNames.size(); i++) {
-      me = nullptr;
       me = ibooker.bookFloat(segmentNames[i]);
       me->Fill(defaultValue);
     }
@@ -184,22 +173,14 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
 
   if (rpcevents < minimumEvents_)
     return;
-  std::stringstream meName;
-  MonitorElement* myMe;
 
-  meName.str("");
-  meName << eventInfoPath_ + "/reportSummaryMap";
-  MonitorElement* reportMe = igetter.get(meName.str());
-
-  MonitorElement* globalMe;
+  MonitorElement* reportMe = igetter.get(eventInfoPath_ + "/reportSummaryMap");
 
   //BARREL
   float barrelFactor = 0;
 
   for (int w = -2; w < 3; w++) {
-    meName.str("");
-    meName << globalFolder_ << "/RPCChamberQuality_Roll_vs_Sector_Wheel" << w;
-    myMe = igetter.get(meName.str());
+    MonitorElement* myMe = igetter.get(fmt::format("{}/RPCChamberQuality_Roll_vs_Sector_Wheel{}", globalFolder_.c_str(), w));
 
     if (myMe) {
       float wheelFactor = 0;
@@ -231,9 +212,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
 
       wheelFactor = wheelFactor / myMe->getNbinsX();
 
-      meName.str("");
-      meName << eventInfoPath_ + "/reportSummaryContents/RPC_Wheel" << w;
-      globalMe = igetter.get(meName.str());
+      MonitorElement* globalMe = igetter.get(fmt::format("{}/reportSummaryContents/RPC_Wheel{}", eventInfoPath_.c_str(), w));
       if (globalMe)
         globalMe->Fill(wheelFactor);
 
@@ -251,9 +230,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
       if (d == 0)
         continue;
 
-      meName.str("");
-      meName << globalFolder_ << "/RPCChamberQuality_Ring_vs_Segment_Disk" << d;
-      myMe = igetter.get(meName.str());
+      MonitorElement* myMe = igetter.get(fmt::format("{}/RPCChamberQuality_Ring_vs_Segment_Disk{}", globalFolder_, d));
 
       if (myMe) {
         float diskFactor = 0;
@@ -290,9 +267,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
 
         diskFactor = diskFactor / 6;
 
-        meName.str("");
-        meName << eventInfoPath_ + "/reportSummaryContents/RPC_Disk" << d;
-        globalMe = igetter.get(meName.str());
+        MonitorElement* globalMe = igetter.get(fmt::format("{}/reportSummaryContents/RPC_Disk{}", eventInfoPath_, d));
         if (globalMe)
           globalMe->Fill(diskFactor);
 
@@ -309,7 +284,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
     rpcFactor = (barrelFactor + endcapFactor) / 2;
   }
 
-  globalMe = igetter.get(eventInfoPath_ + "/reportSummary");
+  MonitorElement* globalMe = igetter.get(eventInfoPath_ + "/reportSummary");
   if (globalMe)
     globalMe->Fill(rpcFactor);
 }

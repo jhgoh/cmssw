@@ -15,7 +15,6 @@
 #include <TH1F.h>
 #include <TH2F.h>
 
-#include <iostream>
 #include <iomanip>
 
 RPCMonitorRaw::RPCMonitorRaw(const edm::ParameterSet& cfg) : theConfig(cfg) {

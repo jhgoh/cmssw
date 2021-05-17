@@ -2,12 +2,10 @@
 #include "DQM/RPCMonitorClient/interface/RPCOccupancyTest.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
-// Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-//Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 
-#include <sstream>
+#include <fmt/format.h>
 
 RPCOccupancyTest::RPCOccupancyTest(const edm::ParameterSet& ps) {
   edm::LogVerbatim("rpceventsummary") << "[RPCOccupancyTest]: Constructor";
@@ -67,26 +65,19 @@ void RPCOccupancyTest::clientOperation() {
 void RPCOccupancyTest::myBooker(DQMStore::IBooker& ibooker) {
   ibooker.setCurrentFolder(globalFolder_);
 
-  std::stringstream histoName;
   rpcdqm::utils rpcUtils;
 
-  histoName.str("");
-  histoName << "RPC_Active_Channel_Fractions";
-  Active_Fraction = ibooker.book1D(histoName.str().c_str(), histoName.str().c_str(), 1, 0.5, 1.5);
+  Active_Fraction = ibooker.book1D("RPC_Active_Channel_Fractions", "RPC_Active_Channel_Fractions", 1, 0.5, 1.5);
   Active_Fraction->setBinLabel(1, "Active Fraction", 1);
 
-  histoName.str("");
-  histoName << "RPC_Active_Inactive_Strips";
-  Active_Dead = ibooker.book1D(histoName.str().c_str(), histoName.str().c_str(), 2, 0.5, 2.5);
+  Active_Dead = ibooker.book1D("RPC_Active_Inactive_Strips", "RPC_Active_Inactive_Strips", 2, 0.5, 2.5);
   Active_Dead->setBinLabel(1, "Active Strips", 1);
   Active_Dead->setBinLabel(2, "Inactive Strips", 1);
 
   for (int w = -2; w <= 2; w++) {  //loop on wheels
+    const std::string histoName = fmt::format("AsymmetryLeftRight_Roll_vs_Sector_Wheel{}", w);
 
-    histoName.str("");
-    histoName << "AsymmetryLeftRight_Roll_vs_Sector_Wheel" << w;
-
-    AsyMeWheel[w + 2] = ibooker.book2D(histoName.str().c_str(), histoName.str().c_str(), 12, 0.5, 12.5, 21, 0.5, 21.5);
+    AsyMeWheel[w + 2] = ibooker.book2D(histoName, histoName, 12, 0.5, 12.5, 21, 0.5, 21.5);
 
     rpcUtils.labelXAxisSector(AsyMeWheel[w + 2]);
     rpcUtils.labelYAxisRoll(AsyMeWheel[w + 2], 0, w, useRollInfo_);
@@ -101,16 +92,8 @@ void RPCOccupancyTest::myBooker(DQMStore::IBooker& ibooker) {
     if (d > 0)
       offset--;  //used to skip case equale to zero
 
-    histoName.str("");
-    histoName << "AsymmetryLeftRight_Ring_vs_Segment_Disk" << d;
-    AsyMeDisk[d + offset] = ibooker.book2D(histoName.str().c_str(),
-                                           histoName.str().c_str(),
-                                           36,
-                                           0.5,
-                                           36.5,
-                                           3 * numberOfRings_,
-                                           0.5,
-                                           3 * numberOfRings_ + 0.5);
+    const std::string histoName = fmt::format("AsymmetryLeftRight_Ring_vs_Segment_Disk{}", d);
+    AsyMeDisk[d + offset] = ibooker.book2D(histoName, histoName, 36, 0.5, 36.5, 3 * numberOfRings_, 0.5, 3 * numberOfRings_ + 0.5);
 
     rpcUtils.labelXAxisSegment(AsyMeDisk[d + offset]);
     rpcUtils.labelYAxisRing(AsyMeDisk[d + offset], numberOfRings_, useRollInfo_);
@@ -150,7 +133,7 @@ void RPCOccupancyTest::fillGlobalME(RPCDetId& detId, MonitorElement* myMe) {
                          : yBin = (detId.ring() - 1) * 3 - detId.roll() + 1);
   }
 
-  int stripInRoll = myMe->getNbinsX();
+  const int stripInRoll = myMe->getNbinsX();
   totalStrips_ += (float)stripInRoll;
   float FOccupancy = 0;
   float BOccupancy = 0;

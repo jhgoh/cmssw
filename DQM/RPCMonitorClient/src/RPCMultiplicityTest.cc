@@ -9,7 +9,7 @@
 // Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 
-#include <sstream>
+#include <fmt/format.h>
 
 RPCMultiplicityTest::RPCMultiplicityTest(const edm::ParameterSet& ps) {
   edm::LogVerbatim("multiplicity") << "[RPCMultiplicityTest]: Constructor";
@@ -28,23 +28,19 @@ void RPCMultiplicityTest::beginJob(std::string& workingFolder) {
 void RPCMultiplicityTest::myBooker(DQMStore::IBooker& ibooker) {
   ibooker.setCurrentFolder(globalFolder_);
 
-  std::stringstream histoName;
   rpcdqm::utils rpcUtils;
 
   for (int i = -2; i <= 2; i++) {  //loop on wheels and disks
 
-    histoName.str("");
-    histoName << "NumberOfDigi_Mean_Roll_vs_Sector_Wheel" << i;
-
-    MULTWheel[i + 2] = ibooker.book2D(histoName.str().c_str(), histoName.str().c_str(), 12, 0.5, 12.5, 21, 0.5, 21.5);
+    const std::string histoName = fmt::format("NumberOfDigi_Mean_Roll_vs_Sector_Wheel{}", i);
+    MULTWheel[i + 2] = ibooker.book2D(histoName, histoName, 12, 0.5, 12.5, 21, 0.5, 21.5);
 
     rpcUtils.labelXAxisSector(MULTWheel[i + 2]);
     rpcUtils.labelYAxisRoll(MULTWheel[i + 2], 0, i, useRollInfo_);
 
     if (testMode_) {
-      histoName.str("");
-      histoName << "NumberOfDigi_Mean_Distribution_Wheel" << i;
-      MULTDWheel[i + 2] = ibooker.book1D(histoName.str().c_str(), histoName.str().c_str(), 100, 0.5, 50.5);
+      const std::string histoName = fmt::format("NumberOfDigi_Mean_Distribution_Wheel{}", i);
+      MULTDWheel[i + 2] = ibooker.book1D(histoName, histoName, 100, 0.5, 50.5);
     }
 
   }  //end wheels
@@ -57,23 +53,14 @@ void RPCMultiplicityTest::myBooker(DQMStore::IBooker& ibooker) {
     if (d > 0)
       offset--;  //used to skip case equale to zero
 
-    histoName.str("");
-    histoName << "NumberOfDigi_Mean_Ring_vs_Segment_Disk" << d;
-    MULTDisk[d + offset] = ibooker.book2D(histoName.str().c_str(),
-                                          histoName.str().c_str(),
-                                          36,
-                                          0.5,
-                                          36.5,
-                                          3 * numberOfRings_,
-                                          0.5,
-                                          3 * numberOfRings_ + 0.5);
+    const std::string histoName = fmt::format("NumberOfDigi_Mean_Ring_vs_Segment_Disk{}", d);
+    MULTDisk[d + offset] = ibooker.book2D(histoName, histoName, 36, 0.5, 36.5, 3 * numberOfRings_, 0.5, 3 * numberOfRings_ + 0.5);
     rpcUtils.labelXAxisSegment(MULTDisk[d + offset]);
     rpcUtils.labelYAxisRing(MULTDisk[d + offset], numberOfRings_, useRollInfo_);
 
     if (testMode_) {
-      histoName.str("");
-      histoName << "NumberOfDigi_Mean_Distribution_Disk" << d;
-      MULTDDisk[d + offset] = ibooker.book1D(histoName.str().c_str(), histoName.str().c_str(), 100, 0.5, 50.5);
+      const std::string histoName = fmt::format("NumberOfDigi_Mean_Distribution_Disk{}", d);
+      MULTDDisk[d + offset] = ibooker.book1D(histoName, histoName, 100, 0.5, 50.5);
     }
   }  //end loop on wheels and disks
 }

@@ -11,7 +11,7 @@
 
 #include <TMath.h>
 
-#include <sstream>
+#include <fmt/format.h>
 
 RPCRecHitProbability::RPCRecHitProbability(const edm::ParameterSet& pset) : counter(0) {
   saveRootFile = pset.getUntrackedParameter<bool>("SaveRootFile", false);
@@ -55,49 +55,35 @@ void RPCRecHitProbability::bookHistograms(DQMStore::IBooker& ibooker,
   RPCRecHitMuonEta_ = ibooker.book2D(
       "RPCRecHitMuonEta", "Number Of RecHits per Muons vs Eta", 20 * muEtaCut_, -muEtaCut_, muEtaCut_, 7, 0.5, 7.5);
 
-  std::stringstream name, title;
+  std::string name, title;
   for (int i = 0; i < 6; i++) {
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonEta";
-    title << "At least " << (i + 1) << " Cluster vs Eta";
-    recHitEta_[i] = ibooker.book1D(name.str(), title.str(), 20 * muEtaCut_, -muEtaCut_, muEtaCut_);
+    name = fmt::format("{}RecHitMuonEta",  i+1);
+    title = fmt::format("At least {} Cluster vs Eta", i+1);
+    recHitEta_[i] = ibooker.book1D(name, title, 20 * muEtaCut_, -muEtaCut_, muEtaCut_);
 
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonPhiB";
-    title << "At least " << (i + 1) << " Cluster vs Phi-Barrel";
-    recHitPhi_B_[i] = ibooker.book1D(name.str(), title.str(), 144, -TMath::Pi(), TMath::Pi());
+    name = fmt::format("{}RecHitMuonPhiB", i+1);
+    title = fmt::format("At least {} Cluster vs Phi-Barrel", i+1);
+    recHitPhi_B_[i] = ibooker.book1D(name, title, 144, -TMath::Pi(), TMath::Pi());
 
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonPtB";
-    title << "At least " << (i + 1) << " Cluster vs Pt-Barrel";
-    recHitPt_B_[i] = ibooker.book1D(name.str(), title.str(), ptBins, muPtCut_, 100);
+    name = fmt::format("{}RecHitMuonPtB", i+1);
+    title = fmt::format("At least {} Cluster vs Pt-Barrel", i+1);
+    recHitPt_B_[i] = ibooker.book1D(name, title, ptBins, muPtCut_, 100);
 
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonPhiEP";
-    title << "At least " << (i + 1) << " Cluster vs Phi-Endcap+";
-    recHitPhi_EP_[i] = ibooker.book1D(name.str(), title.str(), 144, -TMath::Pi(), TMath::Pi());
+    name = fmt::format("{}RecHitMuonPhiEP", i+1);
+    title = fmt::format("At least {} Cluster vs Phi-Endcap+", i+1);
+    recHitPhi_EP_[i] = ibooker.book1D(name, title, 144, -TMath::Pi(), TMath::Pi());
 
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonPtEP";
-    title << "At least " << (i + 1) << " Cluster vs Pt-Endcap+";
-    recHitPt_EP_[i] = ibooker.book1D(name.str(), title.str(), ptBins, muPtCut_, 100);
+    name = fmt::format("{}RecHitMuonPtEP", i+1);
+    title = fmt::format("At least {} Cluster vs Pt-Endcap+", i+1);
+    recHitPt_EP_[i] = ibooker.book1D(name, title, ptBins, muPtCut_, 100);
 
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonPhiEM";
-    title << "At least " << (i + 1) << " Cluster vs Phi-Endcap-";
-    recHitPhi_EM_[i] = ibooker.book1D(name.str(), title.str(), 144, -TMath::Pi(), TMath::Pi());
+    name = fmt::format("{}RecHitMuonPhiEM", i+1);
+    title = fmt::format("At least {} Cluster vs Phi-Endcap-", i+1);
+    recHitPhi_EM_[i] = ibooker.book1D(name, title, 144, -TMath::Pi(), TMath::Pi());
 
-    name.str("");
-    title.str("");
-    name << (i + 1) << "RecHitMuonPtEM";
-    title << "At least " << (i + 1) << " Cluster vs Pt-Endcap-";
-    recHitPt_EM_[i] = ibooker.book1D(name.str(), title.str(), ptBins, muPtCut_, 100);
+    name = fmt::format("{}RecHitMuonPtEM", i+1);
+    title = fmt::format("At least {} Cluster vs Pt-Endcap-", i+1);
+    recHitPt_EM_[i] = ibooker.book1D(name, title, ptBins, muPtCut_, 100);
   }
 
   dcs_ = true;
