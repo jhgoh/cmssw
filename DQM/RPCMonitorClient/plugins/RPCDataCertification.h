@@ -1,17 +1,15 @@
 #ifndef RPCMonitorClient_RPCDataCertification_H
 #define RPCMonitorClient_RPCDataCertification_H
 
-#include "FWCore/ServiceRegistry/interface/Service.h"
-#include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/DQMEDHarvester.h"
+#include "DQMServices/Core/interface/DQMStore.h"
+
+#include <utility>
 
 class RPCDataCertification : public DQMEDHarvester {
 public:
-  /// Constructor
   RPCDataCertification(const edm::ParameterSet& pset);
-
-  /// Destructor
-  ~RPCDataCertification() override;
+  ~RPCDataCertification() override = default;
 
 protected:
   void beginJob() override;

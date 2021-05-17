@@ -1,11 +1,9 @@
 #include "DQM/RPCMonitorClient/plugins/RPCDataCertification.h"
 
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-#include "DQMServices/Core/interface/DQMStore.h"
 //CondFormats
 #include "CondFormats/RunInfo/interface/RunInfo.h"
 #include "CondFormats/DataRecord/interface/RunSummaryRcd.h"
@@ -20,8 +18,6 @@ RPCDataCertification::RPCDataCertification(const edm::ParameterSet& ps) {
   init_ = false;
   defaultValue_ = 1.;
 }
-
-RPCDataCertification::~RPCDataCertification() {}
 
 void RPCDataCertification::beginJob() {}
 

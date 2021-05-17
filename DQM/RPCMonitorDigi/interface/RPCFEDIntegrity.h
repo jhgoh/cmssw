@@ -1,33 +1,22 @@
 #ifndef RPCFEDIntegrity_H
 #define RPCFEDIntegrity_H
 
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include <FWCore/Framework/interface/EDAnalyzer.h>
-#include <FWCore/Framework/interface/ESHandle.h>
-#include <FWCore/Framework/interface/MakerMacros.h>
-#include "FWCore/ServiceRegistry/interface/Service.h"
-
-#include <DQMServices/Core/interface/DQMEDAnalyzer.h>
-
-#include "DataFormats/RPCDigi/interface/RPCRawDataCounts.h"
+#include "DQMServices/Core/interface/DQMEDAnalyzer.h"
 #include "DQMServices/Core/interface/DQMStore.h"
 
-#include <memory>
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "DataFormats/RPCDigi/interface/RPCRawDataCounts.h"
+
 #include <string>
-//#include <map>
+#include <vector>
 
 class RPCFEDIntegrity : public DQMEDAnalyzer {
 public:
   /// Constructor
   RPCFEDIntegrity(const edm::ParameterSet &ps);
-
-  /// Destructor
   ~RPCFEDIntegrity() override;
 
-  /// Begin Lumi block
-
   void bookHistograms(DQMStore::IBooker &, edm::Run const &, edm::EventSetup const &) override;
-  /// Analyze
   void analyze(const edm::Event &iEvent, const edm::EventSetup &c) override;
 
 private:

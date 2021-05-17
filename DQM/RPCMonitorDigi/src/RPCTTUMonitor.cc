@@ -1,8 +1,9 @@
 #include "DQM/RPCMonitorDigi/interface/RPCTTUMonitor.h"
-//FW Core
+
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-//
 RPCTTUMonitor::RPCTTUMonitor(const edm::ParameterSet& iConfig) {
   ttuFolder = iConfig.getUntrackedParameter<std::string>("TTUFolder", "RPC/TTU");
   outputFile = iConfig.getUntrackedParameter<std::string>("OutPutFile", "");
@@ -14,8 +15,6 @@ RPCTTUMonitor::RPCTTUMonitor(const edm::ParameterSet& iConfig) {
   m_ttBits = iConfig.getParameter<std::vector<unsigned> >("BitNumbers");
   m_maxttBits = m_ttBits.size();
 }
-
-RPCTTUMonitor::~RPCTTUMonitor() {}
 
 // ------------ method called to for each event  ------------
 void RPCTTUMonitor::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {

@@ -1,15 +1,12 @@
 #ifndef RPCRecHitProbability_h
 #define RPCRecHitProbability_h
 
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "DQMServices/Core/interface/DQMEDAnalyzer.h"
+#include "DQMServices/Core/interface/DQMStore.h"
+
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/Event.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
-//DQMServices
-#include <DQMServices/Core/interface/DQMEDAnalyzer.h>
-#include "DQMServices/Core/interface/DQMStore.h"
-///Data Format
+
 #include "DataFormats/Scalers/interface/DcsStatus.h"
 #include "DataFormats/Common/interface/Handle.h"
 #include "DataFormats/RPCRecHit/interface/RPCRecHitCollection.h"

@@ -1,16 +1,13 @@
-#include "CondCore/CondDB/interface/Types.h"
 #include "DQM/RPCMonitorClient/interface/RPCDBHandler.h"
+#include "CondCore/CondDB/interface/Types.h"
+#include "CondFormats/DataRecord/interface/RPCDQMObjectRcd.h"
 
 RPCDBHandler::RPCDBHandler(const edm::ParameterSet& iConfig)
     : m_name(iConfig.getUntrackedParameter<std::string>("name", "RPCDBHandler")),
       sinceTime(iConfig.getUntrackedParameter<unsigned>("IOVRun", 0)) {}
 
-RPCDBHandler::~RPCDBHandler() {}
-
 void RPCDBHandler::getNewObjects() {
   cond::Time_t myTime = sinceTime;
-
-  //  std::cout << "sinceTime= " << myTime << std::endl;
 
   size_t n_empty_run = 0;
   if (tagInfo().size > 0 && (tagInfo().lastInterval.since + 1) < myTime) {

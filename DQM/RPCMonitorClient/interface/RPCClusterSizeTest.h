@@ -2,15 +2,12 @@
 #define RPCClusterSizeTest_H
 
 #include "DQM/RPCMonitorClient/interface/RPCClient.h"
-#include "DQMServices/Core/interface/DQMStore.h"
 
 class RPCClusterSizeTest : public RPCClient {
 public:
-  /// Constructor
   RPCClusterSizeTest(const edm::ParameterSet &ps);
+  ~RPCClusterSizeTest() override = default;
 
-  /// Destructor
-  ~RPCClusterSizeTest() override;
   void clientOperation() override;
   void getMonitorElements(std::vector<MonitorElement *> &, std::vector<RPCDetId> &, std::string &) override;
   void beginJob(std::string &) override;

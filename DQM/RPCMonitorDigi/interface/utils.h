@@ -4,6 +4,9 @@
 #include "DataFormats/MuonDetId/interface/RPCDetId.h"
 #include "DQMServices/Core/interface/DQMStore.h"
 
+#include <TH1.h>
+#include <TH2.h>
+
 #include <vector>
 #include <iomanip>
 #include <string>

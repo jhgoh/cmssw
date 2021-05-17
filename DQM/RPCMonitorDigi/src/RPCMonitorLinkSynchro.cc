@@ -1,5 +1,3 @@
-#include <memory>
-
 #include "DQM/RPCMonitorDigi/interface/RPCMonitorLinkSynchro.h"
 #include "DQM/RPCMonitorDigi/interface/RPCLinkSynchroHistoMaker.h"
 
@@ -13,6 +11,8 @@
 #include "CondFormats/RPCObjects/interface/RPCEMap.h"
 #include "CondFormats/RPCObjects/interface/RPCReadOutMapping.h"
 
+#include <memory>
+
 RPCMonitorLinkSynchro::RPCMonitorLinkSynchro(const edm::ParameterSet& cfg)
     : theConfig(cfg),
       theSynchroStat(RPCLinkSynchroStat(theConfig.getUntrackedParameter<bool>("useFirstHitOnly", false)))
@@ -21,8 +21,6 @@ RPCMonitorLinkSynchro::RPCMonitorLinkSynchro(const edm::ParameterSet& cfg)
   rpcRawSynchroProdItemTag_ =
       consumes<RPCRawSynchro::ProdItem>(cfg.getParameter<edm::InputTag>("rpcRawSynchroProdItemTag"));
 }
-
-RPCMonitorLinkSynchro::~RPCMonitorLinkSynchro() {}
 
 void RPCMonitorLinkSynchro::endLuminosityBlock(const edm::LuminosityBlock& ls, const edm::EventSetup& es) {
   RPCLinkSynchroHistoMaker hm(theSynchroStat);

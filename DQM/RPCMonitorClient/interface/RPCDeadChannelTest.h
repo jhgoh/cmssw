@@ -3,15 +3,10 @@
 
 #include "DQM/RPCMonitorClient/interface/RPCClient.h"
 
-//#include "DQMServices/Core/interface/DQMStore.h"
-
 class RPCDeadChannelTest : public RPCClient {
 public:
-  /// Constructor
   RPCDeadChannelTest(const edm::ParameterSet &ps);
-
-  /// Destructor
-  ~RPCDeadChannelTest() override;
+  ~RPCDeadChannelTest() override = default;
 
   void clientOperation() override;
   void getMonitorElements(std::vector<MonitorElement *> &, std::vector<RPCDetId> &, std::string &) override;

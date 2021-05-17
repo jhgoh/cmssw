@@ -1,7 +1,7 @@
 // Package:    RPCDqmClient
 // Original Author:  Anna Cimmino
-
 #include "DQM/RPCMonitorClient/plugins/RPCDqmClient.h"
+
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 //include client headers
@@ -15,7 +15,6 @@
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
 //Framework
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <FWCore/Framework/interface/ESHandle.h>
 

@@ -10,10 +10,11 @@
 #include <DataFormats/MuonDetId/interface/RPCDetId.h>
 #include <string>
 #include <sstream>
+
 class RPCBookFolderStructure {
 public:
   explicit RPCBookFolderStructure(){};
-  ~RPCBookFolderStructure(){};
+  ~RPCBookFolderStructure() = default;
 
   std::string folderStructure(RPCDetId detId) {
     std::stringstream myStream;

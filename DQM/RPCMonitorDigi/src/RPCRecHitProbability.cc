@@ -1,5 +1,3 @@
-#include <sstream>
-#include <TMath.h>
 #include "DQM/RPCMonitorDigi/interface/RPCRecHitProbability.h"
 //Geometry
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
@@ -10,6 +8,10 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 //Reco Muon
 #include "RecoMuon/TransientTrackingRecHit/interface/MuonTransientTrackingRecHit.h"
+
+#include <TMath.h>
+
+#include <sstream>
 
 RPCRecHitProbability::RPCRecHitProbability(const edm::ParameterSet& pset) : counter(0) {
   saveRootFile = pset.getUntrackedParameter<bool>("SaveRootFile", false);

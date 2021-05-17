@@ -1,5 +1,5 @@
 #include "DQM/RPCMonitorClient/plugins/RPCDaqInfo.h"
-#include "DataFormats/FEDRawData/interface/FEDNumbering.h"
+
 #include "CondFormats/RunInfo/interface/RunInfo.h"
 #include "CondFormats/RunInfo/interface/RunSummary.h"
 #include "CondFormats/DataRecord/interface/RunSummaryRcd.h"
@@ -17,7 +17,6 @@ RPCDaqInfo::RPCDaqInfo(const edm::ParameterSet& ps) {
   init_ = false;
 }
 
-RPCDaqInfo::~RPCDaqInfo() {}
 void RPCDaqInfo::beginJob() {}
 void RPCDaqInfo::dqmEndLuminosityBlock(DQMStore::IBooker& ibooker,
                                        DQMStore::IGetter& igetter,

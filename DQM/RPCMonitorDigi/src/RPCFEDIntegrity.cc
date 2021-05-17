@@ -1,19 +1,14 @@
 /*  \author Anna Cimmino*/
-#include <algorithm>
-#include <DQM/RPCMonitorDigi/interface/RPCFEDIntegrity.h>
-// Framework
-#include "FWCore/MessageLogger/interface/MessageLogger.h"
-#include <FWCore/Framework/interface/LuminosityBlock.h>
-#include <FWCore/Framework/interface/Event.h>
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
-//DQM Services
-#include "DQMServices/Core/interface/DQMStore.h"
+#include "DQM/RPCMonitorDigi/interface/RPCFEDIntegrity.h"
 
-//EventFilter
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+#include "FWCore/Framework/interface/Event.h"
+
 #include "EventFilter/RPCRawToDigi/interface/DataRecord.h"
 #include "EventFilter/RPCRawToDigi/interface/ReadoutError.h"
 
-typedef std::map<std::pair<int, int>, int>::const_iterator IT;
+#include <algorithm>
+#include <map>
 
 RPCFEDIntegrity::RPCFEDIntegrity(const edm::ParameterSet& ps) {
   edm::LogVerbatim("rpcfedintegrity") << "[RPCFEDIntegrity]: Constructor";

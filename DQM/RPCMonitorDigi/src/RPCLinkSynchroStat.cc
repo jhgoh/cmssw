@@ -1,11 +1,8 @@
 #include "DQM/RPCMonitorDigi/interface/RPCLinkSynchroStat.h"
-#include "CondFormats/RPCObjects/interface/RPCReadOutMapping.h"
 #include "CondFormats/RPCObjects/interface/LinkBoardSpec.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-#include <algorithm>
 #include <sstream>
-#include <iostream>
 #include <iomanip>
 
 bool RPCLinkSynchroStat::LessLinkName::operator()(const BoardAndCounts& o1, const BoardAndCounts& o2) {

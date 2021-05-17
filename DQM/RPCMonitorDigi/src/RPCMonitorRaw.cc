@@ -5,7 +5,6 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/Framework/interface/Event.h"
 
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
@@ -13,16 +12,11 @@
 
 #include "DataFormats/RPCDigi/interface/ReadoutError.h"
 
-#include "TH1F.h"
-#include "TH2F.h"
-#include "TFile.h"
+#include <TH1F.h>
+#include <TH2F.h>
 
-#include <fstream>
 #include <iostream>
 #include <iomanip>
-#include <bitset>
-
-typedef std::map<std::pair<int, int>, int>::const_iterator IT;
 
 RPCMonitorRaw::RPCMonitorRaw(const edm::ParameterSet& cfg) : theConfig(cfg) {
   rpcRawDataCountsTag_ = consumes<RPCRawDataCounts>(cfg.getParameter<edm::InputTag>("rpcRawDataCountsTag"));
@@ -86,25 +80,25 @@ void RPCMonitorRaw::analyze(const edm::Event& ev, const edm::EventSetup& es) {
   //
   // record type
   //
-  for (IT it = counts.theRecordTypes.begin(); it != counts.theRecordTypes.end(); ++it)
+  for (auto it = counts.theRecordTypes.begin(); it != counts.theRecordTypes.end(); ++it)
     me_t[it->first.first - 790]->Fill(it->first.second, it->second);
 
   //
   // good events topology
   //
-  for (IT it = counts.theGoodEvents.begin(); it != counts.theGoodEvents.end(); ++it)
+  for (auto it = counts.theGoodEvents.begin(); it != counts.theGoodEvents.end(); ++it)
     me_mapGoodEvents->Fill(it->first.second, it->first.first, it->second);
 
   //
   // bad events topology
   //
-  for (IT it = counts.theBadEvents.begin(); it != counts.theBadEvents.end(); ++it)
+  for (auto it = counts.theBadEvents.begin(); it != counts.theBadEvents.end(); ++it)
     me_mapBadEvents->Fill(it->first.second, it->first.first, it->second);
 
   //
   // readout errors
   //
-  for (IT it = counts.theReadoutErrors.begin(); it != counts.theReadoutErrors.end(); ++it) {
+  for (auto it = counts.theReadoutErrors.begin(); it != counts.theReadoutErrors.end(); ++it) {
     rpcrawtodigi::ReadoutError error(it->first.second);
     LinkBoardElectronicIndex ele = error.where();
     rpcrawtodigi::ReadoutError::ReadoutErrorType type = error.type();

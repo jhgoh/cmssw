@@ -2,12 +2,12 @@
 #define DQM_RPCMonitorDigi_RPCLinkSynchroHistoMaker_H
 
 #include "DQM/RPCMonitorDigi/interface/RPCLinkSynchroStat.h"
-#include <string>
-#include <vector>
-#include <map>
+#include "CondFormats/RPCObjects/interface/RPCReadOutMapping.h"
+#include "DataFormats/RPCDigi/interface/RPCRawSynchro.h"
 
-class TH1F;
-class TH2F;
+#include <TH1F.h>
+#include <TH2F.h>
+
 class RPCReadOutMapping;
 
 class RPCLinkSynchroHistoMaker {

@@ -3,9 +3,6 @@
 #include "EventFilter/RPCRawToDigi/interface/DataRecord.h"
 #include "EventFilter/RPCRawToDigi/interface/ReadoutError.h"
 
-#include "TH1F.h"
-#include "TH2F.h"
-
 #include <vector>
 #include <sstream>
 

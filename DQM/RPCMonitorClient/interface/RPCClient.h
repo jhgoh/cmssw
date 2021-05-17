@@ -7,8 +7,7 @@
 
 #include "DQMServices/Core/interface/DQMStore.h"
 
-#include <DataFormats/MuonDetId/interface/RPCDetId.h>
-#include <FWCore/Framework/interface/Event.h>
+#include "DataFormats/MuonDetId/interface/RPCDetId.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include <vector>

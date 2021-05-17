@@ -1,11 +1,8 @@
 #include "DQM/RPCMonitorClient/plugins/RPCDCSSummary.h"
 
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-
-//#include "DQMServices/Core/interface/DQMStore.h"
 
 //CondFormats
 #include "CondFormats/RunInfo/interface/RunInfo.h"
@@ -23,8 +20,6 @@ RPCDCSSummary::RPCDCSSummary(const edm::ParameterSet& ps) {
   init_ = false;
   defaultValue_ = 1.;
 }
-
-RPCDCSSummary::~RPCDCSSummary() {}
 
 void RPCDCSSummary::beginJob() {}
 

@@ -3,17 +3,13 @@
 
 #include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/DQMEDHarvester.h"
-#include <map>
+
+#include <utility>
 
 class RPCDCSSummary : public DQMEDHarvester {
 public:
-  /// Constructor
   RPCDCSSummary(const edm::ParameterSet &);
-
-  /// Destructor
-  ~RPCDCSSummary() override;
-
-  // Operations
+  ~RPCDCSSummary() override = default;
 
 protected:
   void beginJob() override;

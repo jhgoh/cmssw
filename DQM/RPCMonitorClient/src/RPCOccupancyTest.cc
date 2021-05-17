@@ -1,13 +1,13 @@
 /*  \author Anna Cimmino*/
-//#include <cmath>
-#include <sstream>
-#include <DQM/RPCMonitorClient/interface/RPCOccupancyTest.h>
+#include "DQM/RPCMonitorClient/interface/RPCOccupancyTest.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 
 // Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 //Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
+
+#include <sstream>
 
 RPCOccupancyTest::RPCOccupancyTest(const edm::ParameterSet& ps) {
   edm::LogVerbatim("rpceventsummary") << "[RPCOccupancyTest]: Constructor";
@@ -23,8 +23,6 @@ RPCOccupancyTest::RPCOccupancyTest(const edm::ParameterSet& ps) {
 
   prefixDir_ = subsystemFolder + "/" + recHitTypeFolder;
 }
-
-RPCOccupancyTest::~RPCOccupancyTest() {}
 
 void RPCOccupancyTest::beginJob(std::string& workingFolder) {
   edm::LogVerbatim("rpceventsummary") << "[RPCOccupancyTest]: Begin job ";

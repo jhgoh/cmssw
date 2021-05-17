@@ -1,13 +1,12 @@
 #ifndef DQM_RPCMonitorClient_RPCLinkSynchroStat_H
 #define DQM_RPCMonitorClient_RPCLinkSynchroStat_H
 
-#include <map>
-#include <cmath>
-#include <vector>
 #include "CondFormats/RPCObjects/interface/LinkBoardElectronicIndex.h"
 #include "DataFormats/RPCDigi/interface/RPCRawSynchro.h"
+#include "CondFormats/RPCObjects/interface/RPCReadOutMapping.h"
 
-class RPCReadOutMapping;
+#include <string>
+#include <vector>
 
 class RPCLinkSynchroStat {
 public:

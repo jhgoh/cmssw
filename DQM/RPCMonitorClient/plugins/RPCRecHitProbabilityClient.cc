@@ -1,13 +1,9 @@
 // Original Author:  Anna Cimmino
-
 #include "DQM/RPCMonitorClient/plugins/RPCRecHitProbabilityClient.h"
-//Framework
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-//DQMServices
-#include "DQMServices/Core/interface/DQMStore.h"
 
 #include <string>
+#include <sstream>
 
 RPCRecHitProbabilityClient::RPCRecHitProbabilityClient(const edm::ParameterSet &iConfig) {
   edm::LogVerbatim("rpcdqmclient") << "[RPCRecHitProbabilityClient]: Constructor";
@@ -19,8 +15,6 @@ RPCRecHitProbabilityClient::RPCRecHitProbabilityClient(const edm::ParameterSet &
 
   globalFolder_ = subsystemFolder + "/" + recHitTypeFolder + "/" + summaryFolder;
 }
-
-RPCRecHitProbabilityClient::~RPCRecHitProbabilityClient() {}
 
 void RPCRecHitProbabilityClient::beginJob() {
   edm::LogVerbatim("rpcrechitprobabilityclient") << "[RPCRecHitProbabilityClient]: Begin Job";

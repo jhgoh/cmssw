@@ -1,12 +1,10 @@
 /* *  \author Anna Cimmino*/
-#include "DQM/RPCMonitorDigi/interface/utils.h"
 #include <DQM/RPCMonitorClient/interface/RPCDeadChannelTest.h>
+#include "DQM/RPCMonitorDigi/interface/utils.h"
 // Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 // Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
-#include "Geometry/RPCGeometry/interface/RPCGeometry.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
 
 #include <sstream>
 
@@ -19,8 +17,6 @@ RPCDeadChannelTest::RPCDeadChannelTest(const edm::ParameterSet& ps) {
   numberOfDisks_ = ps.getUntrackedParameter<int>("NumberOfEndcapDisks", 4);
   numberOfRings_ = ps.getUntrackedParameter<int>("NumberOfEndcapRings", 2);
 }
-
-RPCDeadChannelTest::~RPCDeadChannelTest() {}
 
 void RPCDeadChannelTest::beginJob(std::string& workingFolder) {
   edm::LogVerbatim("rpcdeadchanneltest") << "[RPCDeadChannelTest]: Begin Job";

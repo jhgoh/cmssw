@@ -1,18 +1,15 @@
 #ifndef DQM_RPCMonitorClient_DQMDaqInfo_H
 #define DQM_RPCMonitorClient_DQMDaqInfo_H
 
-// system include files
-#include <iostream>
-#include <fstream>
-
-#include "FWCore/ServiceRegistry/interface/Service.h"
-#include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/DQMEDHarvester.h"
+#include "DQMServices/Core/interface/DQMStore.h"
+
+#include <utility>
 
 class RPCDaqInfo : public DQMEDHarvester {
 public:
   explicit RPCDaqInfo(const edm::ParameterSet &);
-  ~RPCDaqInfo() override;
+  ~RPCDaqInfo() override = default;
 
 protected:
   void beginJob() override;
