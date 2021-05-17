@@ -1,6 +1,7 @@
 // Package:    RPCDqmClient
 // Original Author:  Anna Cimmino
 #include "DQM/RPCMonitorClient/plugins/RPCDqmClient.h"
+#include "DQM/RPCMonitorClient/interface/RPCNameHelper.h"
 
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
@@ -12,7 +13,6 @@
 #include "DQM/RPCMonitorClient/interface/RPCNoisyStripTest.h"
 //Geometry
 #include "Geometry/RPCGeometry/interface/RPCGeometry.h"
-#include "Geometry/RPCGeometry/interface/RPCGeomServ.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
 //Framework
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -145,13 +145,11 @@ void RPCDqmClient::getMonitorElements(DQMStore::IGetter& igetter) {
   //dbe_->setCurrentFolder(prefixDir_);
   RPCBookFolderStructure* folderStr = new RPCBookFolderStructure();
   MonitorElement* myMe = nullptr;
-  std::string rollName = "";
 
   //loop on all geometry and get all histos
   for (auto& detId : myDetIds_) {
     //Get name
-    RPCGeomServ RPCname(detId);
-    rollName = useRollInfo_ ? RPCname.name() : RPCname.chambername();
+    const std::string rollName = RPCNameHelper::name(detId, useRollInfo_);
 
     //loop on clients
     for (unsigned int cl = 0, nCL = clientModules_.size(); cl < nCL; ++cl) {

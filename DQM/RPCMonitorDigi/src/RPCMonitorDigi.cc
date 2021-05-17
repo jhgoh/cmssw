@@ -1,5 +1,6 @@
 #include "DQM/RPCMonitorDigi/interface/RPCMonitorDigi.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
+#include "DQM/RPCMonitorClient/interface/RPCNameHelper.h"
 
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
 #include "Geometry/CommonDetUnit/interface/GeomDet.h"
@@ -65,16 +66,14 @@ void RPCMonitorDigi::bookHistograms(DQMStore::IBooker& ibooker, edm::Run const& 
           }
 
           //booking all histograms
-          RPCGeomServ rpcsrv(rpcId);
-          std::string nameID = rpcsrv.name();
+          const std::string nameID = RPCNameHelper::rollName(rpcId);
           if (useMuonDigis_)
             bookRollME(ibooker, rpcId, rpcGeo, muonFolder_, meMuonCollection[nameID]);
           bookRollME(ibooker, rpcId, rpcGeo, noiseFolder_, meNoiseCollection[nameID]);
         }
       } else {
         RPCDetId rpcId = roles[0]->id();  //any roll would do - here I just take the first one
-        RPCGeomServ rpcsrv(rpcId);
-        std::string nameID = rpcsrv.chambername();
+        const std::string nameID = RPCNameHelper::chamberName(rpcId);
         if (useMuonDigis_)
           bookRollME(ibooker, rpcId, rpcGeo, muonFolder_, meMuonCollection[nameID]);
         bookRollME(ibooker, rpcId, rpcGeo, noiseFolder_, meNoiseCollection[nameID]);
@@ -240,18 +239,13 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
        detIdIter != recHitMap.end();
        detIdIter++) {
     RPCDetId detId = (*detIdIter).first;
+    RPCGeomServ geoServ(detId);
 
     //get roll number
     rpcdqm::utils rpcUtils;
     int nr = rpcUtils.detId2RollNr(detId);
 
-    RPCGeomServ geoServ(detId);
-    std::string nameRoll = "";
-
-    if (useRollInfo_)
-      nameRoll = geoServ.name();
-    else
-      nameRoll = geoServ.chambername();
+    const std::string nameRoll = RPCNameHelper::name(detId, useRollInfo_);
 
     int region = (int)detId.region();
     int wheelOrDiskNumber;
