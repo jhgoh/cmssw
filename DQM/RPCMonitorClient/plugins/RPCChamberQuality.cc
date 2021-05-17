@@ -1,5 +1,5 @@
 #include <sstream>
-#include <DQM/RPCMonitorClient/interface/RPCChamberQuality.h>
+#include <DQM/RPCMonitorClient/plugins/RPCChamberQuality.h>
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 // Framework

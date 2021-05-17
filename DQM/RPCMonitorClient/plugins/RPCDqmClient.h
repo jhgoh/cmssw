@@ -5,6 +5,7 @@
 #include "DQMServices/Core/interface/DQMEDHarvester.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DQM/RPCMonitorClient/interface/RPCClient.h"
+#include "DataFormats/MuonDetId/interface/RPCDetId.h"
 
 #include <string>
 #include <vector>

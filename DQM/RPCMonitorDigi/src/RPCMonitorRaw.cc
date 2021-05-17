@@ -1,4 +1,5 @@
-#include "DQM/RPCMonitorClient/interface/RPCMonitorRaw.h"
+#include "DQM/RPCMonitorDigi/interface/RPCMonitorRaw.h"
+#include "DQM/RPCMonitorClient/interface/RPCRawDataCountsHistoMaker.h"
 
 #include "DQMServices/Core/interface/DQMStore.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
@@ -11,7 +12,6 @@
 #include "CondFormats/RPCObjects/interface/LinkBoardElectronicIndex.h"
 
 #include "DataFormats/RPCDigi/interface/ReadoutError.h"
-#include "DQM/RPCMonitorClient/interface/RPCRawDataCountsHistoMaker.h"
 
 #include "TH1F.h"
 #include "TH2F.h"

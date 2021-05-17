@@ -1,3 +1,5 @@
+#ifndef RPCTTUMonitor_H
+#define RPCTTUMonitor_H
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -83,3 +85,4 @@ private:
   edm::EDGetTokenT<L1MuGMTReadoutCollection> m_gmtReadoutLabel;
   edm::EDGetTokenT<L1GtTechnicalTriggerRecord> m_rpcTechTrigEmu;
 };
+#endif

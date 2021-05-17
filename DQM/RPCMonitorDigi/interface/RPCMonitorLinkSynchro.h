@@ -4,14 +4,14 @@
 /** \class RPCMonitorLinkSynchro
  ** Monitor and anlyse synchro counts () produced by R2D. 
  **/
-#include "FWCore/Framework/interface/EDAnalyzer.h"
+//#include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "FWCore/Framework/interface/ESWatcher.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "CondFormats/DataRecord/interface/RPCEMapRcd.h"
 
-#include "DQM/RPCMonitorClient/interface/RPCLinkSynchroStat.h"
+#include "DQM/RPCMonitorDigi/interface/RPCLinkSynchroStat.h"
 #include "DQMServices/Core/interface/DQMOneEDAnalyzer.h"
 #include "DQMServices/Core/interface/DQMStore.h"
 

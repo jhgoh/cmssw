@@ -1,7 +1,7 @@
 // Package:    RPCDqmClient
 // Original Author:  Anna Cimmino
 
-#include "DQM/RPCMonitorClient/interface/RPCDqmClient.h"
+#include "DQM/RPCMonitorClient/plugins/RPCDqmClient.h"
 #include "DQM/RPCMonitorDigi/interface/RPCBookFolderStructure.h"
 #include "DQM/RPCMonitorDigi/interface/utils.h"
 //include client headers

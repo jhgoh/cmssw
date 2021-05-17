@@ -1,4 +1,4 @@
-#include "DQM/RPCMonitorClient/interface/RPCDaqInfo.h"
+#include "DQM/RPCMonitorClient/plugins/RPCDaqInfo.h"
 #include "DataFormats/FEDRawData/interface/FEDNumbering.h"
 #include "CondFormats/RunInfo/interface/RunInfo.h"
 #include "CondFormats/RunInfo/interface/RunSummary.h"

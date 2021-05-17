@@ -1,6 +1,6 @@
 // Original Author:  Anna Cimmino
 
-#include "DQM/RPCMonitorClient/interface/RPCRecHitProbabilityClient.h"
+#include "DQM/RPCMonitorClient/plugins/RPCRecHitProbabilityClient.h"
 //Framework
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"

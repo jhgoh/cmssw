@@ -1,7 +1,7 @@
 /*  \author Anna Cimmino*/
 #include <sstream>
 
-#include <DQM/RPCMonitorClient/interface/RPCEventSummary.h>
+#include <DQM/RPCMonitorClient/plugins/RPCEventSummary.h>
 //CondFormats
 #include "CondFormats/RunInfo/interface/RunInfo.h"
 #include "CondFormats/DataRecord/interface/RunSummaryRcd.h"

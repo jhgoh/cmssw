@@ -15,7 +15,6 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include <DataFormats/MuonDetId/interface/RPCDetId.h>
 #include <Geometry/RPCGeometry/interface/RPCGeometry.h>
 #include <Geometry/CommonDetUnit/interface/GeomDet.h>
