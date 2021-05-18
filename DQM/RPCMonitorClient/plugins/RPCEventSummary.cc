@@ -164,11 +164,10 @@ void RPCEventSummary::dqmEndJob(DQMStore::IBooker& ibooker, DQMStore::IGetter& i
 
 void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
   float rpcevents = minimumEvents_;
-  MonitorElement* RPCEvents;
-  RPCEvents = igetter.get(prefixFolder_ + "/RPCEvents");
+  MonitorElement* meRPCEvents = igetter.get(prefixFolder_ + "/RPCEvents");
 
-  if (RPCEvents) {
-    rpcevents = RPCEvents->getBinContent(1);
+  if (meRPCEvents) {
+    rpcevents = meRPCEvents->getBinContent(1);
   }
 
   if (rpcevents < minimumEvents_)
@@ -178,105 +177,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
 
   //BARREL
   float barrelFactor = 0;
-
-  for (int w = -2; w < 3; w++) {
-    MonitorElement* myMe = igetter.get(fmt::format("{}/RPCChamberQuality_Roll_vs_Sector_Wheel{}", globalFolder_, w));
-
-    if (myMe) {
-      float wheelFactor = 0;
-
-      for (int s = 1; s <= myMe->getNbinsX(); s++) {
-        float sectorFactor = 0;
-        int rollInSector = 0;
-
-        for (int r = 1; r <= myMe->getNbinsY(); r++) {
-          if ((s != 4 && r > 17) || ((s == 9 || s == 10) && r > 15))
-            continue;
-          rollInSector++;
-
-          if (myMe->getBinContent(s, r) == PARTIALLY_DEAD)
-            sectorFactor += 0.8;
-          else if (myMe->getBinContent(s, r) == DEAD)
-            sectorFactor += 0;
-          else
-            sectorFactor += 1;
-        }
-        if (rollInSector != 0)
-          sectorFactor = sectorFactor / rollInSector;
-
-        if (reportMe)
-          reportMe->setBinContent(w + 8, s, sectorFactor);
-        wheelFactor += sectorFactor;
-
-      }  //end loop on sectors
-
-      wheelFactor = wheelFactor / myMe->getNbinsX();
-
-      MonitorElement* globalMe = igetter.get(fmt::format("{}/reportSummaryContents/RPC_Wheel{}", eventInfoPath_, w));
-      if (globalMe)
-        globalMe->Fill(wheelFactor);
-
-      barrelFactor += wheelFactor;
-    }  //
-  }    //end loop on wheel
-
-  barrelFactor = barrelFactor / 5;
-
   float endcapFactor = 0;
-
-  if (doEndcapCertification_) {
-    //Endcap
-    for (int d = -numberDisk_; d <= numberDisk_; d++) {
-      if (d == 0)
-        continue;
-
-      MonitorElement* myMe = igetter.get(fmt::format("{}/RPCChamberQuality_Ring_vs_Segment_Disk{}", globalFolder_, d));
-
-      if (myMe) {
-        float diskFactor = 0;
-
-        float sectorFactor[6] = {0, 0, 0, 0, 0, 0};
-
-        for (int i = 0; i < 6; i++) {
-          int firstSeg = (i * 6) + 1;
-          int lastSeg = firstSeg + 6;
-          int rollInSector = 0;
-          for (int seg = firstSeg; seg < lastSeg; seg++) {
-            for (int y = 1; y <= myMe->getNbinsY(); y++) {
-              rollInSector++;
-              if (myMe->getBinContent(seg, y) == PARTIALLY_DEAD)
-                sectorFactor[i] += 0.8;
-              else if (myMe->getBinContent(seg, y) == DEAD)
-                sectorFactor[i] += 0;
-              else
-                sectorFactor[i] += 1;
-            }
-          }
-          sectorFactor[i] = sectorFactor[i] / rollInSector;
-        }  //end loop on Sectors
-
-        for (int sec = 0; sec < 6; sec++) {
-          diskFactor += sectorFactor[sec];
-          if (reportMe) {
-            if (d < 0)
-              reportMe->setBinContent(d + 5, sec + 1, sectorFactor[sec]);
-            else
-              reportMe->setBinContent(d + 11, sec + 1, sectorFactor[sec]);
-          }
-        }
-
-        diskFactor = diskFactor / 6;
-
-        MonitorElement* globalMe = igetter.get(fmt::format("{}/reportSummaryContents/RPC_Disk{}", eventInfoPath_, d));
-        if (globalMe)
-          globalMe->Fill(diskFactor);
-
-        endcapFactor += diskFactor;
-      }  //end loop on disks
-    }
-
-    endcapFactor = endcapFactor / (numberDisk_ * 2);
-  }
 
   //Fill repor summary
   float rpcFactor = barrelFactor;
