@@ -79,7 +79,7 @@ void RPCChamberQuality::myBooker(DQMStore::IBooker& ibooker) {
   rpcdqm::utils rpcUtils;
 
   for (int r = 0; r < 3; ++r) {
-    const std::string histoName = fmt::format("RPCChamberQuality_%d", regions_[r]);
+    const std::string histoName = fmt::format("RPCChamberQuality_{}", regions_[r]);
     MonitorElement* me = ibooker.book1D(histoName, histoName, 7, 0.5, 7.5);
 
     for (int x = 1; x < 8; ++x) {
@@ -97,13 +97,13 @@ void RPCChamberQuality::myBooker(DQMStore::IBooker& ibooker) {
   }
 
   for (int w = -2; w < 3; ++w) {  //Loop on wheels
-    const std::string histoName2D = fmt::format("RPCChamberQuality_Roll_vs_Sector_Wheel%d", w);
+    const std::string histoName2D = fmt::format("RPCChamberQuality_Roll_vs_Sector_Wheel{}", w);
     MonitorElement* me2D = ibooker.book2D(histoName2D, histoName2D, 12, 0.5, 12.5, 21, 0.5, 21.5);
 
     rpcUtils.labelXAxisSector(me2D);
     rpcUtils.labelYAxisRoll(me2D, 0, w, useRollInfo_);
 
-    const std::string histoName1D = fmt::format("RPCChamberQuality_Distribution_Wheel%d", w);
+    const std::string histoName1D = fmt::format("RPCChamberQuality_Distribution_Wheel{}", w);
     MonitorElement* me1D = ibooker.book1D(histoName1D, histoName1D, 7, 0.5, 7.5);
 
     for (int x = 1; x < 8; ++x) {
@@ -114,12 +114,12 @@ void RPCChamberQuality::myBooker(DQMStore::IBooker& ibooker) {
   for (int d = -numberOfDisks_; d <= numberOfDisks_; ++d) {  // Loop on disk
     if (d == 0)
       continue;
-    const std::string histoName2D = fmt::format("RPCChamberQuality_Ring_vs_Segment_Disk%d", d);  //  2D histo for RPC Qtest
+    const std::string histoName2D = fmt::format("RPCChamberQuality_Ring_vs_Segment_Disk{}", d);  //  2D histo for RPC Qtest
     MonitorElement* me2D = ibooker.book2D(histoName2D, histoName2D, 36, 0.5, 36.5, 6, 0.5, 6.5);
     rpcUtils.labelXAxisSegment(me2D);
     rpcUtils.labelYAxisRing(me2D, 2, useRollInfo_);
 
-    const std::string histoName1D = fmt::format("RPCChamberQuality_Distribution_Disk", d);
+    const std::string histoName1D = fmt::format("RPCChamberQuality_Distribution_Disk{}", d);
     MonitorElement* me1D = ibooker.book1D(histoName1D, histoName1D, 7, 0.5, 7.5);
 
     for (int x = 1; x < 8; ++x) {
@@ -141,7 +141,7 @@ void RPCChamberQuality::fillMonitorElements(DQMStore::IGetter& igetter) {
     MonitorElement* summary[3];
 
     for (int r = 0; r < 3; ++r) {
-      const std::string meName = fmt::format("%s/RPCChamberQuality_%d", summaryDir_.c_str(), RPCChamberQuality::regions_[r]);
+      const std::string meName = fmt::format("{}/RPCChamberQuality_{}", summaryDir_, RPCChamberQuality::regions_[r]);
       summary[r] = igetter.get(meName);
 
       if (summary[r] != nullptr)
@@ -150,7 +150,7 @@ void RPCChamberQuality::fillMonitorElements(DQMStore::IGetter& igetter) {
 
     //Barrel
     for (int wheel = -2; wheel < 3; ++wheel) {  // loop by Wheels
-      const std::string meName = fmt::format("Roll_vs_Sector_Wheel%d", wheel);
+      const std::string meName = fmt::format("Roll_vs_Sector_Wheel{}", wheel);
       this->performeClientOperation(meName, 0, summary[1], igetter);
     }  // loop by Wheels
 
@@ -159,7 +159,7 @@ void RPCChamberQuality::fillMonitorElements(DQMStore::IGetter& igetter) {
       if (i == 0)
         continue;
 
-      const std::string meName = fmt::format("Ring_vs_Segment_Disk%d", i);
+      const std::string meName = fmt::format("Ring_vs_Segment_Disk{}", i);
 
       if (i < 0)
         this->performeClientOperation(meName, -1, summary[0], igetter);
@@ -167,7 +167,7 @@ void RPCChamberQuality::fillMonitorElements(DQMStore::IGetter& igetter) {
         this->performeClientOperation(meName, 1, summary[2], igetter);
     }  //loop on Disks
 
-    const std::string meName = fmt::format("%s/RPC_System_Quality_Overview", summaryDir_.c_str());
+    const std::string meName = fmt::format("{}/RPC_System_Quality_Overview", summaryDir_);
     MonitorElement* RpcOverview = igetter.get(meName);
     if (RpcOverview) {  //Fill Overview ME
       RpcOverview->Reset();

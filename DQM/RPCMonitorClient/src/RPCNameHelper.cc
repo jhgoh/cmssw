@@ -67,7 +67,7 @@ std::string RPCNameHelper::chamberName(const RPCDetId& detId)
       }
     }
 
-    return fmt::format("W{:+2d}_RB{:d}{}_S{:02d}", wheel, station, roll.c_str(), subsector);
+    return fmt::format("W{:+2d}_RB{:d}{}_S{:02d}", wheel, station, roll, subsector);
   }
 
   return "";

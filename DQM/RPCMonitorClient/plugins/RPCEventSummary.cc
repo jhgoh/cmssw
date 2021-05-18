@@ -180,7 +180,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
   float barrelFactor = 0;
 
   for (int w = -2; w < 3; w++) {
-    MonitorElement* myMe = igetter.get(fmt::format("{}/RPCChamberQuality_Roll_vs_Sector_Wheel{}", globalFolder_.c_str(), w));
+    MonitorElement* myMe = igetter.get(fmt::format("{}/RPCChamberQuality_Roll_vs_Sector_Wheel{}", globalFolder_, w));
 
     if (myMe) {
       float wheelFactor = 0;
@@ -212,7 +212,7 @@ void RPCEventSummary::clientOperation(DQMStore::IGetter& igetter) {
 
       wheelFactor = wheelFactor / myMe->getNbinsX();
 
-      MonitorElement* globalMe = igetter.get(fmt::format("{}/reportSummaryContents/RPC_Wheel{}", eventInfoPath_.c_str(), w));
+      MonitorElement* globalMe = igetter.get(fmt::format("{}/reportSummaryContents/RPC_Wheel{}", eventInfoPath_, w));
       if (globalMe)
         globalMe->Fill(wheelFactor);
 

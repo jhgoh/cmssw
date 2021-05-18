@@ -344,14 +344,14 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
 
       // ###################### Sector- Ring Level #################################
 
-      tmpName = fmt::format("Occupancy_{}_{}_Sector_{}", wheelOrDiskType.c_str(), wheelOrDiskNumber, sector);
+      tmpName = fmt::format("Occupancy_{}_{}_Sector_{}", wheelOrDiskType, wheelOrDiskNumber, sector);
       if (meSectorRing[tmpName]) {
         for (int s = firstStrip; s <= lastStrip; s++) {  //Loop on digis
           meSectorRing[tmpName]->Fill(s, nr);
         }
       }
 
-      tmpName = fmt::format("Occupancy_{}_{}_Ring_{}", wheelOrDiskType.c_str(), wheelOrDiskNumber, ring);
+      tmpName = fmt::format("Occupancy_{}_{}_Ring_{}", wheelOrDiskType, wheelOrDiskNumber, ring);
       if (geoServ.segment() > 0 && geoServ.segment() <= 18) {
         tmpName += "_CH01-CH18";
       } else if (geoServ.segment() >= 19) {
@@ -370,7 +370,7 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
         if (meWheelDisk[tmpName])
           meWheelDisk[tmpName]->Fill(sector, clusterSize);
 
-        tmpName = fmt::format("Occupancy_Roll_vs_Sector_{}_{}", wheelOrDiskType.c_str(), wheelOrDiskNumber);
+        tmpName = fmt::format("Occupancy_Roll_vs_Sector_{}_{}", wheelOrDiskType, wheelOrDiskNumber);
         if (meWheelDisk[tmpName])
           meWheelDisk[tmpName]->Fill(sector, nr, clusterSize);
 
@@ -384,20 +384,20 @@ void RPCMonitorDigi::performSourceOperation(std::map<RPCDetId, std::vector<RPCRe
           }
         }
 
-        tmpName = fmt::format("Occupancy_Ring_vs_Segment_{}_{}", wheelOrDiskType.c_str(), wheelOrDiskNumber);
+        tmpName = fmt::format("Occupancy_Ring_vs_Segment_{}_{}", wheelOrDiskType, wheelOrDiskNumber);
         if (meWheelDisk[tmpName])
           meWheelDisk[tmpName]->Fill(geoServ.segment(), (ring - 1) * 3 - detId.roll() + 1, clusterSize);
       }
 
-      tmpName = fmt::format("BxDistribution_{}_{}", wheelOrDiskType.c_str(), wheelOrDiskNumber);
+      tmpName = fmt::format("BxDistribution_{}_{}", wheelOrDiskType, wheelOrDiskNumber);
       if (meWheelDisk[tmpName])
         meWheelDisk[tmpName]->Fill(bx);
 
-      tmpName = fmt::format("ClusterSize_{}_{}_Layer{}", wheelOrDiskType.c_str(), wheelOrDiskNumber, layer);
+      tmpName = fmt::format("ClusterSize_{}_{}_Layer{}", wheelOrDiskType, wheelOrDiskNumber, layer);
       if (meWheelDisk[tmpName])
         meWheelDisk[tmpName]->Fill(clusterSize);
 
-      tmpName = fmt::format("ClusterSize_{}_{}_Ring{}", wheelOrDiskType.c_str(), wheelOrDiskNumber, ring);
+      tmpName = fmt::format("ClusterSize_{}_{}_Ring{}", wheelOrDiskType, wheelOrDiskNumber, ring);
       if (meWheelDisk[tmpName])
         meWheelDisk[tmpName]->Fill(clusterSize);
 

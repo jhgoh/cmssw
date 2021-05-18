@@ -51,37 +51,37 @@ void RPCRecHitProbabilityClient::dqmEndJob(DQMStore::IBooker &ibooker, DQMStore:
 
   MonitorElement *recHit;
   for (int i = 1; i <= 6; i++) {
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonEta", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonEta", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonEtaTH1F);
     }
 
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtB", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtB", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonPtBTH1F);
     }
 
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiB", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiB", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonPhiBTH1F);
     }
 
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtEP", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtEP", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonPtEPTH1F);
     }
 
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiEP", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiEP", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonPhiEPTH1F);
     }
 
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtEM", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPtEM", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonPtEMTH1F);
     }
 
-    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiEM", globalFolder_.c_str(), i));
+    recHit = igetter.get(fmt::format("{}/{}RecHitMuonPhiEM", globalFolder_, i));
     if (recHit) {
       recHit->getTH1F()->Divide(NumberOfMuonPhiEMTH1F);
     }
