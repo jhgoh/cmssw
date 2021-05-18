@@ -28,7 +28,7 @@ void RPCClusterSizeTest::getMonitorElements(std::vector<MonitorElement*>& meVect
                                             std::string& clientHistoName) {
   //Get  ME for each roll
   for (unsigned int i = 0; i < meVector.size(); i++) {
-    std::string meName = meVector[i]->getName();
+    const std::string meName = meVector[i]->getName();
 
     if (meName.find(clientHistoName) != std::string::npos) {
       myClusterMe_.push_back(meVector[i]);

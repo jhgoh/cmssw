@@ -7,9 +7,6 @@ DEFINE_FWK_MODULE(RPCDqmClient);
 #include <DQM/RPCMonitorClient/plugins/RPCRecHitProbabilityClient.h>
 DEFINE_FWK_MODULE(RPCRecHitProbabilityClient);
 
-#include <DQM/RPCMonitorClient/plugins/RPCChamberQuality.h>
-DEFINE_FWK_MODULE(RPCChamberQuality);
-
 #include <DQM/RPCMonitorClient/plugins/RPCDcsInfoClient.h>
 DEFINE_FWK_MODULE(RPCDcsInfoClient);
 
