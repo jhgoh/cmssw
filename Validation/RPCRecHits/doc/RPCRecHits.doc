@@ -20,7 +20,6 @@
 \subsection interface Public interface
 <!-- List the classes that are provided for use in other packages (if any) -->
 
-- RPCPointVsRecHit
 - RPCRecHitValid
 - RPCRecHitValidClient
 - RPCValidHistograms
@@ -35,7 +34,6 @@
 \subsection modules Modules
 <!-- Describe modules implemented in this package and their parameter set -->
 
-- RPCPointVsRecHit
 - RPCRecHitValid
 - RPCRecHitValidClient
 

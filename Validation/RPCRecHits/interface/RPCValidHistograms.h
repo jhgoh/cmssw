@@ -40,11 +40,17 @@ struct RPCValidHistograms {
 
   // Residuals
   MEP resBarrel, resEndcap;
-  MEP res_wheel_res, res_disk_res, res_station_res, res_ring_res;
+  MEP resBarrel_W0, resBarrel_W1, resBarrel_W2;
+  MEP resBarrel_S1L1, resBarrel_S1L2, resBarrel_S2L1, resBarrel_S2L2, resBarrel_S3, resBarrel_S4;
+  MEP resEndcap_D1, resEndcap_D2, resEndcap_D3, resEndcap_D4;
+  MEP resEndcap_R1, resEndcap_R2, resEndcap_R3;
 
   // Pulls
   MEP pullBarrel, pullEndcap;
-  MEP pull_wheel_pull, pull_disk_pull, pull_station_pull, pull_ring_pull;
+  MEP pullBarrel_W0, pullBarrel_W1, pullBarrel_W2;
+  MEP pullBarrel_S1L1, pullBarrel_S1L2, pullBarrel_S2L1, pullBarrel_S2L2, pullBarrel_S3, pullBarrel_S4;
+  MEP pullEndcap_D1, pullEndcap_D2, pullEndcap_D3, pullEndcap_D4;
+  MEP pullEndcap_R1, pullEndcap_R2, pullEndcap_R3;
 
 private:
   bool booked_;

@@ -117,35 +117,95 @@ void RPCValidHistograms::bookHistograms(DQMStore::IBooker &booker, const std::st
   resBarrel = booker.book1D("ResBarrel", "Global Residuals for Barrel;Residual [cm]", 100, -8, 8);
   resEndcap = booker.book1D("ResEndcap", "Global Residuals for Endcap;Residual [cm]", 100, -8, 8);
 
+  resBarrel_W0 = booker.book1D("ResBarrel_W0", "Residual Wheel   0;Residual [cm]", 80, -8, 8);
+  resBarrel_W1 = booker.book1D("ResBarrel_W1", "Residual Wheel +-1;Residual [cm]", 80, -8, 8);
+  resBarrel_W2 = booker.book1D("ResBarrel_W2", "Residual Wheel +-2;Residual [cm]", 80, -8, 8);
+
+  resBarrel_S1L1 = booker.book1D("ResBarrel_S1L1", "Residual Wheel Station1 Layer1;Residual [cm]", 80, -8, 8);
+  resBarrel_S1L2 = booker.book1D("ResBarrel_S1L2", "Residual Wheel Station1 Layer2;Residual [cm]", 80, -8, 8);
+  resBarrel_S2L1 = booker.book1D("ResBarrel_S2L1", "Residual Wheel Station2 Layer1;Residual [cm]", 80, -8, 8);
+  resBarrel_S2L2 = booker.book1D("ResBarrel_S2L2", "Residual Wheel Station2 Layer2;Residual [cm]", 80, -8, 8);
+  resBarrel_S3 = booker.book1D("ResBarrel_S3", "Residual Wheel Station3;Residual [cm]", 80, -8, 8);
+  resBarrel_S4 = booker.book1D("ResBarrel_S4", "Residual Wheel Station4;Residual [cm]", 80, -8, 8);
+
+  resEndcap_D1 = booker.book1D("ResEndcap_D1", "Residual Disk +-1;Residual [cm]", 80, -8, 8);
+  resEndcap_D2 = booker.book1D("ResEndcap_D2", "Residual Disk +-2;Residual [cm]", 80, -8, 8);
+  resEndcap_D3 = booker.book1D("ResEndcap_D3", "Residual Disk +-3;Residual [cm]", 80, -8, 8);
+  resEndcap_D4 = booker.book1D("ResEndcap_D4", "Residual Disk +-4;Residual [cm]", 80, -8, 8);
+
+  resEndcap_R1 = booker.book1D("ResEndcap_R1", "Residual Ring 1;Residual [cm]", 80, -8, 8);
+  resEndcap_R2 = booker.book1D("ResEndcap_R2", "Residual Ring 2;Residual [cm]", 80, -8, 8);
+  resEndcap_R3 = booker.book1D("ResEndcap_R3", "Residual Ring 3;Residual [cm]", 80, -8, 8);
+
   resBarrel->getTH1()->SetMinimum(0);
   resEndcap->getTH1()->SetMinimum(0);
 
-  res_wheel_res = booker.book2D("Res_wheel_res", "Residuals vs Wheel;;Residual [cm]", 5, -2.5, 2.5, 50, -8, 8);
-  res_disk_res = booker.book2D("Res_disk_res", "Residuals vs Disk;;Residual [cm]", 9, -4.5, 4.5, 50, -8, 8);
-  res_station_res = booker.book2D("Res_station_res", "Redisuals vs Station;;Residual [cm]", 4, 0.5, 4.5, 50, -8, 8);
-  res_ring_res = booker.book2D("Res_ring_res", "Redisuals vs Ring;;Residual [cm]", 4, 0.5, 4.5, 50, -8, 8);
+  resBarrel_W0->getTH1()->SetMinimum(0);
+  resBarrel_W0->getTH1()->SetMinimum(0);
+  resBarrel_W0->getTH1()->SetMinimum(0);
 
-  res_wheel_res->getTH2F()->SetMinimum(0);
-  res_disk_res->getTH2F()->SetMinimum(0);
-  res_station_res->getTH2F()->SetMinimum(0);
-  res_ring_res->getTH2F()->SetMinimum(0);
+  resBarrel_S1L1->getTH1()->SetMinimum(0);
+  resBarrel_S1L2->getTH1()->SetMinimum(0);
+  resBarrel_S2L1->getTH1()->SetMinimum(0);
+  resBarrel_S2L2->getTH1()->SetMinimum(0);
+  resBarrel_S3->getTH1()->SetMinimum(0);
+  resBarrel_S4->getTH1()->SetMinimum(0);
+
+  resEndcap_D1->getTH1()->SetMinimum(0);
+  resEndcap_D2->getTH1()->SetMinimum(0);
+  resEndcap_D3->getTH1()->SetMinimum(0);
+  resEndcap_D4->getTH1()->SetMinimum(0);
+
+  resEndcap_R1->getTH1()->SetMinimum(0);
+  resEndcap_R2->getTH1()->SetMinimum(0);
+  resEndcap_R3->getTH1()->SetMinimum(0);
 
   // Pulls
   pullBarrel = booker.book1D("PullBarrel", "Global Pull for Barrel;Pull", 100, -3, 3);
   pullEndcap = booker.book1D("PullEndcap", "Global Pull for Endcap;Pull", 100, -3, 3);
 
+  pullBarrel_W0 = booker.book1D("ResBarrel_W0", "Residual Wheel   0;Residual [cm]", 80, -8, 8);
+  pullBarrel_W1 = booker.book1D("ResBarrel_W1", "Residual Wheel +-1;Residual [cm]", 80, -8, 8);
+  pullBarrel_W2 = booker.book1D("ResBarrel_W2", "Residual Wheel +-2;Residual [cm]", 80, -8, 8);
+
+  pullBarrel_S1L1 = booker.book1D("ResBarrel_S1L1", "Residual Wheel Station1 Layer1;Residual [cm]", 80, -8, 8);
+  pullBarrel_S1L2 = booker.book1D("ResBarrel_S1L2", "Residual Wheel Station1 Layer2;Residual [cm]", 80, -8, 8);
+  pullBarrel_S2L1 = booker.book1D("ResBarrel_S2L1", "Residual Wheel Station2 Layer1;Residual [cm]", 80, -8, 8);
+  pullBarrel_S2L2 = booker.book1D("ResBarrel_S2L2", "Residual Wheel Station2 Layer2;Residual [cm]", 80, -8, 8);
+  pullBarrel_S3 = booker.book1D("ResBarrel_S3", "Residual Wheel Station3;Residual [cm]", 80, -8, 8);
+  pullBarrel_S4 = booker.book1D("ResBarrel_S4", "Residual Wheel Station4;Residual [cm]", 80, -8, 8);
+
+  pullEndcap_D1 = booker.book1D("ResEndcap_D1", "Residual Disk +-1;Residual [cm]", 80, -8, 8);
+  pullEndcap_D2 = booker.book1D("ResEndcap_D2", "Residual Disk +-2;Residual [cm]", 80, -8, 8);
+  pullEndcap_D3 = booker.book1D("ResEndcap_D3", "Residual Disk +-3;Residual [cm]", 80, -8, 8);
+  pullEndcap_D4 = booker.book1D("ResEndcap_D4", "Residual Disk +-4;Residual [cm]", 80, -8, 8);
+
+  pullEndcap_R1 = booker.book1D("ResEndcap_R1", "Residual Ring 1;Residual [cm]", 80, -8, 8);
+  pullEndcap_R2 = booker.book1D("ResEndcap_R2", "Residual Ring 2;Residual [cm]", 80, -8, 8);
+  pullEndcap_R3 = booker.book1D("ResEndcap_R3", "Residual Ring 3;Residual [cm]", 80, -8, 8);
+
   pullBarrel->getTH1()->SetMinimum(0);
   pullEndcap->getTH1()->SetMinimum(0);
 
-  pull_wheel_pull = booker.book2D("Pull_wheel_pull", "Pull vs Wheel;;Pull", 5, -2.5, 2.5, 50, -3, 3);
-  pull_disk_pull = booker.book2D("Pull_disk_pull", "Pull vs Disk;;Pull", 9, -4.5, 4.5, 50, -3, 3);
-  pull_station_pull = booker.book2D("Pull_station_pull", "Pull vs Station;;Pull", 4, 0.5, 4.5, 50, -3, 3);
-  pull_ring_pull = booker.book2D("Pull_ring_pull", "Pull vs Ring;;Pull", 4, 0.5, 4.5, 50, -3, 3);
+  pullBarrel_W0->getTH1()->SetMinimum(0);
+  pullBarrel_W0->getTH1()->SetMinimum(0);
+  pullBarrel_W0->getTH1()->SetMinimum(0);
 
-  pull_wheel_pull->getTH2F()->SetMinimum(0);
-  pull_disk_pull->getTH2F()->SetMinimum(0);
-  pull_station_pull->getTH2F()->SetMinimum(0);
-  pull_ring_pull->getTH2F()->SetMinimum(0);
+  pullBarrel_S1L1->getTH1()->SetMinimum(0);
+  pullBarrel_S1L2->getTH1()->SetMinimum(0);
+  pullBarrel_S2L1->getTH1()->SetMinimum(0);
+  pullBarrel_S2L2->getTH1()->SetMinimum(0);
+  pullBarrel_S3->getTH1()->SetMinimum(0);
+  pullBarrel_S4->getTH1()->SetMinimum(0);
+
+  pullEndcap_D1->getTH1()->SetMinimum(0);
+  pullEndcap_D2->getTH1()->SetMinimum(0);
+  pullEndcap_D3->getTH1()->SetMinimum(0);
+  pullEndcap_D4->getTH1()->SetMinimum(0);
+
+  pullEndcap_R1->getTH1()->SetMinimum(0);
+  pullEndcap_R2->getTH1()->SetMinimum(0);
+  pullEndcap_R3->getTH1()->SetMinimum(0);
 
   // Set plot options
   refHitOccupancyBarrel_wheel_station->getTH2F()->SetOption("COLZ");
@@ -155,16 +215,6 @@ void RPCValidHistograms::bookHistograms(DQMStore::IBooker &booker, const std::st
   matchOccupancyBarrel_wheel_station->getTH2F()->SetOption("COLZ");
   matchOccupancyEndcap_disk_ring->getTH2F()->SetOption("COLZ");
 
-  res_wheel_res->getTH2F()->SetOption("COLZ");
-  res_disk_res->getTH2F()->SetOption("COLZ");
-  res_station_res->getTH2F()->SetOption("COLZ");
-  res_ring_res->getTH2F()->SetOption("COLZ");
-
-  pull_wheel_pull->getTH2F()->SetOption("COLZ");
-  pull_disk_pull->getTH2F()->SetOption("COLZ");
-  pull_station_pull->getTH2F()->SetOption("COLZ");
-  pull_ring_pull->getTH2F()->SetOption("COLZ");
-
   refHitOccupancyBarrel_wheel_station->getTH2F()->SetContour(10);
   refHitOccupancyEndcap_disk_ring->getTH2F()->SetContour(10);
   recHitOccupancyBarrel_wheel_station->getTH2F()->SetContour(10);
@@ -172,32 +222,12 @@ void RPCValidHistograms::bookHistograms(DQMStore::IBooker &booker, const std::st
   matchOccupancyBarrel_wheel_station->getTH2F()->SetContour(10);
   matchOccupancyEndcap_disk_ring->getTH2F()->SetContour(10);
 
-  res_wheel_res->getTH2F()->SetContour(10);
-  res_disk_res->getTH2F()->SetContour(10);
-  res_station_res->getTH2F()->SetContour(10);
-  res_ring_res->getTH2F()->SetContour(10);
-
-  pull_wheel_pull->getTH2F()->SetContour(10);
-  pull_disk_pull->getTH2F()->SetContour(10);
-  pull_station_pull->getTH2F()->SetContour(10);
-  pull_ring_pull->getTH2F()->SetContour(10);
-
   refHitOccupancyBarrel_wheel_station->getTH2F()->SetStats(false);
   refHitOccupancyEndcap_disk_ring->getTH2F()->SetStats(false);
   recHitOccupancyBarrel_wheel_station->getTH2F()->SetStats(false);
   recHitOccupancyEndcap_disk_ring->getTH2F()->SetStats(false);
   matchOccupancyBarrel_wheel_station->getTH2F()->SetStats(false);
   matchOccupancyEndcap_disk_ring->getTH2F()->SetStats(false);
-
-  res_wheel_res->getTH2F()->SetStats(false);
-  res_disk_res->getTH2F()->SetStats(false);
-  res_station_res->getTH2F()->SetStats(false);
-  res_ring_res->getTH2F()->SetStats(false);
-
-  pull_wheel_pull->getTH2F()->SetStats(false);
-  pull_disk_pull->getTH2F()->SetStats(false);
-  pull_station_pull->getTH2F()->SetStats(false);
-  pull_ring_pull->getTH2F()->SetStats(false);
 
   // Set bin labels
   for (int i = 1; i <= 5; ++i) {
@@ -210,9 +240,6 @@ void RPCValidHistograms::bookHistograms(DQMStore::IBooker &booker, const std::st
     refHitOccupancyBarrel_wheel_station->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
     recHitOccupancyBarrel_wheel_station->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
     matchOccupancyBarrel_wheel_station->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
-
-    res_wheel_res->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
-    pull_wheel_pull->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
   }
 
   for (int i = 1; i <= 9; ++i) {
@@ -225,9 +252,6 @@ void RPCValidHistograms::bookHistograms(DQMStore::IBooker &booker, const std::st
     refHitOccupancyEndcap_disk_ring->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
     recHitOccupancyEndcap_disk_ring->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
     matchOccupancyEndcap_disk_ring->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
-
-    res_disk_res->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
-    pull_disk_pull->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
   }
 
   for (int i = 1; i <= 4; ++i) {
@@ -240,9 +264,6 @@ void RPCValidHistograms::bookHistograms(DQMStore::IBooker &booker, const std::st
     refHitOccupancyBarrel_wheel_station->getTH2F()->GetYaxis()->SetBinLabel(i, binLabel);
     recHitOccupancyBarrel_wheel_station->getTH2F()->GetYaxis()->SetBinLabel(i, binLabel);
     matchOccupancyBarrel_wheel_station->getTH2F()->GetYaxis()->SetBinLabel(i, binLabel);
-
-    res_station_res->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
-    pull_station_pull->getTH2F()->GetXaxis()->SetBinLabel(i, binLabel);
   }
 
   for (int i = 1; i <= 4; ++i) {

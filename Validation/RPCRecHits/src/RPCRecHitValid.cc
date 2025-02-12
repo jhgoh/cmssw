@@ -556,32 +556,82 @@ void RPCRecHitValid::analyze(const edm::Event &event, const edm::EventSetup &eve
     const double pull = errX == 0 ? -999 : dX / errX;
 
     if (region == 0) {
+      const int layer = roll->id().layer();
+
       ++nMatchHitBarrel;
       h_.resBarrel->Fill(dX);
       h_.pullBarrel->Fill(pull);
       h_.matchOccupancyBarrel_wheel->Fill(ring);
       h_.matchOccupancyBarrel_station->Fill(station);
       h_.matchOccupancyBarrel_wheel_station->Fill(ring, station);
-
-      h_.res_wheel_res->Fill(ring, dX);
-      h_.res_station_res->Fill(station, dX);
-      h_.pull_wheel_pull->Fill(ring, pull);
-      h_.pull_station_pull->Fill(station, pull);
-
       h_matchOccupancyBarrel_detId->Fill(detIdToIndexMapBarrel_[detId.rawId()]);
+
+      if (ring == 0) {
+        h_.resBarrel_W0->Fill(dX);
+        h_.pullBarrel_W0->Fill(dX);
+      } else if (abs(ring) == 1) {
+        h_.resBarrel_W1->Fill(dX);
+        h_.pullBarrel_W1->Fill(dX);
+      } else {
+        h_.resBarrel_W2->Fill(dX);
+        h_.pullBarrel_W2->Fill(dX);
+      }
+
+      if (station == 1) {
+        if (layer == 1) {
+          h_.resBarrel_S1L1->Fill(dX);
+          h_.pullBarrel_S1L1->Fill(pull);
+        } else {
+          h_.resBarrel_S1L2->Fill(dX);
+          h_.pullBarrel_S1L2->Fill(pull);
+        }
+      } else if (station == 2) {
+        if (layer == 1) {
+          h_.resBarrel_S2L1->Fill(dX);
+          h_.pullBarrel_S2L1->Fill(pull);
+        } else {
+          h_.resBarrel_S2L2->Fill(dX);
+          h_.pullBarrel_S2L2->Fill(pull);
+        }
+      } else if (station == 3) {
+        h_.resBarrel_S3->Fill(dX);
+        h_.pullBarrel_S3->Fill(pull);
+      } else if (station == 4) {
+        h_.resBarrel_S4->Fill(dX);
+        h_.pullBarrel_S4->Fill(pull);
+      }
     } else {
       ++nMatchHitEndcap;
       h_.resEndcap->Fill(dX);
       h_.pullEndcap->Fill(pull);
       h_.matchOccupancyEndcap_disk->Fill(region * station);
       h_.matchOccupancyEndcap_disk_ring->Fill(region * station, ring);
-
-      h_.res_disk_res->Fill(region * station, dX);
-      h_.res_ring_res->Fill(ring, dX);
-      h_.pull_disk_pull->Fill(region * station, pull);
-      h_.pull_ring_pull->Fill(ring, pull);
-
       h_matchOccupancyEndcap_detId->Fill(detIdToIndexMapEndcap_[detId.rawId()]);
+
+      if (station==1) {
+        h_.resEndcap_D1->Fill(dX);
+        h_.pullEndcap_D1->Fill(pull);
+      } else if (station==2) {
+        h_.resEndcap_D2->Fill(dX);
+        h_.pullEndcap_D2->Fill(pull);
+      } else if (station==3) {
+        h_.resEndcap_D3->Fill(dX);
+        h_.pullEndcap_D3->Fill(pull);
+      } else {
+        h_.resEndcap_D4->Fill(dX);
+        h_.pullEndcap_D4->Fill(pull);
+      }
+
+      if (ring==1) {
+        h_.resEndcap_R1->Fill(dX);
+        h_.pullEndcap_R1->Fill(pull);
+      } else if (ring==2) {
+        h_.resEndcap_R2->Fill(dX);
+        h_.pullEndcap_R2->Fill(pull);
+      } else {
+        h_.resEndcap_R3->Fill(dX);
+        h_.pullEndcap_R3->Fill(pull);
+      }
     }
   }
   h_.nMatchHitBarrel->Fill(nMatchHitBarrel);
