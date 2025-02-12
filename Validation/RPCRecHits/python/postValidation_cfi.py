@@ -29,36 +29,6 @@ rpcRecHitPostValidation = DQMEDHarvester("DQMGenericClient",
                  "Occupancy/MatchEndcapOccupancy_disk", "Occupancy/RefHitEndcapOccupancy_disk"),
     ),
     resolutionSets = cms.untracked.VPSet(
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Res_wheel"),
-            titlePrefix = cms.untracked.string("Wheel residual"),
-            srcName = cms.untracked.string("Residual/Res_wheel_res")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Res_station"),
-            titlePrefix = cms.untracked.string("Station residual"),
-            srcName = cms.untracked.string("Residual/Res_station_res")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Res_disk"),
-            titlePrefix = cms.untracked.string("Disk residual"),
-            srcName = cms.untracked.string("Residual/Res_disk_res")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Pull_wheel"),
-            titlePrefix = cms.untracked.string("Wheel pull"),
-            srcName = cms.untracked.string("Residual/Pull_wheel_pull")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Pull_station"),
-            titlePrefix = cms.untracked.string("Station pull"),
-            srcName = cms.untracked.string("Residual/Pull_station_pull")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Pull_disk"),
-            titlePrefix = cms.untracked.string("Disk pull"),
-            srcName = cms.untracked.string("Residual/Pull_disk_pull")
-        ),
     ),
     outputFileName = cms.untracked.string("")
 )
@@ -78,36 +48,6 @@ rpcPointVsRecHitPostValidation = DQMEDHarvester("DQMGenericClient",
                  "Occupancy/MatchEndcapOccupancy_disk", "Occupancy/RefHitEndcapOccupancy_disk"),
     ),
     resolutionSets = cms.untracked.VPSet(
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Res_wheel"),
-            titlePrefix = cms.untracked.string("Wheel residual"),
-            srcName = cms.untracked.string("Residual/Res_wheel_res")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Res_station"),
-            titlePrefix = cms.untracked.string("Station residual"),
-            srcName = cms.untracked.string("Residual/Res_station_res")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Res_disk"),
-            titlePrefix = cms.untracked.string("Disk residual"),
-            srcName = cms.untracked.string("Residual/Res_disk_res")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Pull_wheel"),
-            titlePrefix = cms.untracked.string("Wheel pull"),
-            srcName = cms.untracked.string("Residual/Pull_wheel_pull")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Pull_station"),
-            titlePrefix = cms.untracked.string("Station pull"),
-            srcName = cms.untracked.string("Residual/Pull_station_pull")
-        ),
-        cms.PSet(
-            namePrefix = cms.untracked.string("Resolution/Pull_disk"),
-            titlePrefix = cms.untracked.string("Disk pull"),
-            srcName = cms.untracked.string("Residual/Pull_disk_pull")
-        ),
     ),
     outputFileName = cms.untracked.string("")
 )
