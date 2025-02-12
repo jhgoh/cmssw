@@ -608,13 +608,13 @@ void RPCRecHitValid::analyze(const edm::Event &event, const edm::EventSetup &eve
       h_.matchOccupancyEndcap_disk_ring->Fill(region * station, ring);
       h_matchOccupancyEndcap_detId->Fill(detIdToIndexMapEndcap_[detId.rawId()]);
 
-      if (station==1) {
+      if (station == 1) {
         h_.resEndcap_D1->Fill(dX);
         h_.pullEndcap_D1->Fill(pull);
-      } else if (station==2) {
+      } else if (station == 2) {
         h_.resEndcap_D2->Fill(dX);
         h_.pullEndcap_D2->Fill(pull);
-      } else if (station==3) {
+      } else if (station == 3) {
         h_.resEndcap_D3->Fill(dX);
         h_.pullEndcap_D3->Fill(pull);
       } else {
@@ -622,10 +622,10 @@ void RPCRecHitValid::analyze(const edm::Event &event, const edm::EventSetup &eve
         h_.pullEndcap_D4->Fill(pull);
       }
 
-      if (ring==1) {
+      if (ring == 1) {
         h_.resEndcap_R1->Fill(dX);
         h_.pullEndcap_R1->Fill(pull);
-      } else if (ring==2) {
+      } else if (ring == 2) {
         h_.resEndcap_R2->Fill(dX);
         h_.pullEndcap_R2->Fill(pull);
       } else {
