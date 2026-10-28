@@ -29,7 +29,8 @@ bool RPCRecHitStandardAlgo::compute(const RPCRoll& roll,
   Point = LocalPoint(centreOfCluster, y, 0);
 
   if (!cluster.hasY()) {
-    error = LocalError(roll.localError((cluster.firstStrip() + cluster.lastStrip()) / 2.));
+    error = roll.specificTopology().localError((cluster.firstStrip() + cluster.lastStrip()) / 2.,
+                                               cluster.clusterSize() * cluster.clusterSize() / 12.);
   } else {
     // Use the default one for local x error
     float ex2 = roll.localError((cluster.firstStrip() + cluster.lastStrip()) / 2.).xx();
