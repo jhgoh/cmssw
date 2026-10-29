@@ -30,8 +30,6 @@ LocalPoint RPCRoll::centreOfStrip(int strip) const {
 
 LocalPoint RPCRoll::centreOfStrip(float strip) const { return this->specificTopology().localPosition(strip); }
 
-LocalError RPCRoll::localError(float strip) const { return this->specificTopology().localError(strip, 1. / sqrt(12.)); }
-
 float RPCRoll::strip(const LocalPoint& lp) const { return this->specificTopology().strip(lp); }
 
 float RPCRoll::localPitch(const LocalPoint& lp) const { return this->specificTopology().localPitch(lp); }

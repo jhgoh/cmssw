@@ -12,7 +12,6 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Utilities/interface/Exception.h"
-#include "Geometry/CommonTopologies/interface/TrapezoidalStripTopology.h"
 
 // First Step
 bool RPCRecHitStandardAlgo::compute(const RPCRoll& roll,
@@ -21,38 +20,26 @@ bool RPCRecHitStandardAlgo::compute(const RPCRoll& roll,
                                     LocalError& error,
                                     float& time,
                                     float& timeErr) const {
-  // Get Average Strip position
-  const float fstrip = (roll.centreOfStrip(cluster.firstStrip())).x();
-  const float lstrip = (roll.centreOfStrip(cluster.lastStrip())).x();
-  const float centreOfCluster = (fstrip + lstrip) / 2;
-  const double y = cluster.hasY() ? cluster.y() : 0;
-  Point = LocalPoint(centreOfCluster, y, 0);
+  // Cluster centre in the measurement frame: (strip, y/stripLength)
+  const auto& topo = roll.specificTopology();
+  const float stripLen = topo.stripLength();
+  const float strip = (cluster.firstStrip() + cluster.lastStrip()) / 2.f - 0.5f;
+  const float cls = cluster.clusterSize();
 
-  if (!cluster.hasY()) {
-    error = roll.specificTopology().localError((cluster.firstStrip() + cluster.lastStrip()) / 2.,
-                                               cluster.clusterSize() * cluster.clusterSize() / 12.);
-  } else {
-    // Use the default one for local x error
-    float ex2 = roll.localError((cluster.firstStrip() + cluster.lastStrip()) / 2.).xx();
-    // Maximum estimate of local y error, (distance to the boundary)/sqrt(3)
-    // which gives consistent error to the default one at y=0
-    const float stripLen = roll.specificTopology().stripLength();
-    const float maxDy = stripLen / 2 - std::abs(cluster.y());
-
-    // Apply x-position correction for the endcap
-    if (roll.id().region() != 0) {
-      const auto& topo = dynamic_cast<const TrapezoidalStripTopology&>(roll.topology());
-      const double angle = topo.stripAngle((cluster.firstStrip() + cluster.lastStrip()) / 2.);
-      const double x = centreOfCluster - y * std::tan(angle);
-      Point = LocalPoint(x, y, 0);
-
-      // rescale x-error by the change of local pitch
-      const double scale = topo.localPitch(Point) / topo.pitch();
-      ex2 *= scale * scale;
-    }
-
-    error = LocalError(ex2, 0, maxDy * maxDy / 3.);
+  // Across-strip error: flat over the cluster width.
+  // Along-strip error: flat over the strip length, or with y the maximum estimate
+  // (distance to the boundary)/sqrt(3) which is consistent with the former at y=0.
+  float y = 0, vv = 1.f / 12;
+  if (cluster.hasY()) {
+    y = cluster.y();
+    const float maxDy = stripLen / 2 - std::abs(y);
+    vv = maxDy * maxDy / (3 * stripLen * stripLen);
   }
+
+  // The topology takes care of the strip tilt, the local pitch and the x-y correlation
+  const MeasurementPoint mp(strip, y / stripLen);
+  Point = topo.localPosition(mp);
+  error = topo.localError(mp, MeasurementError(cls * cls / 12, 0, vv));
 
   if (cluster.hasTime()) {
     time = cluster.time();

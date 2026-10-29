@@ -26,7 +26,6 @@ public:
 
   LocalPoint centreOfStrip(int strip) const;
   LocalPoint centreOfStrip(float strip) const;
-  LocalError localError(float strip) const;
 
   float strip(const LocalPoint& lp) const;
   float pitch() const;
